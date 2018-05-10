@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3f51b5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#ff4081</color>
+    <color name="colorEarning">#06661f</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="reportButton">#32acf2</color>
+    <color name="withdrawButton">#e544ca</color>
+    <color name="StartTask">#4bdd72</color>
+</resources>

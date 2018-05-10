@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "970739283596",
+    "firebase_url": "https://real-earn-fd225.firebaseio.com",
+    "project_id": "real-earn-fd225",
+    "storage_bucket": "real-earn-fd225.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:970739283596:android:0fce736ab54a79c3",
+        "android_client_info": {
+          "package_name": "realearn.com.apricot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "970739283596-eeajs2vnuppke4riio142s58geek5n7k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "realearn.com.apricot",
+            "certificate_hash": "2276c3cd55741cea5841e9623420f5fa327ed2cc"
+          }
+        },
+        {
+          "client_id": "970739283596-6vv1em6jink27jgalvp0ojhdf52hrts6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDeToN6sjhZj9-6lv6IpM6_FvDNF5_9d1U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "970739283596-6vv1em6jink27jgalvp0ojhdf52hrts6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
