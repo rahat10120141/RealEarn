@@ -42,7 +42,9 @@
         <activity
             android:name=".AppRules"
             android:screenOrientation="portrait" />
-        <activity android:name=".Task_1"></activity>
+        <activity android:name=".Task_1" />
+        <activity android:name=".Task_2" />
+        <activity android:name=".Task_3"></activity>
     </application>
 
 </manifest>

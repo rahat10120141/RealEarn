@@ -27,6 +27,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import realearn.com.apricot.R;
 
@@ -40,6 +41,8 @@ public class UserWelcome extends AppCompatActivity {
 
     User user;
     String uid;
+
+    AppSettings appSettings;
 
     String balance;
 
@@ -64,6 +67,8 @@ public class UserWelcome extends AppCompatActivity {
 
         user=new User(UserWelcome.this);
         uid=user.getuId();
+
+        appSettings=new AppSettings(UserWelcome.this);
 
         startTaskBtn=(Button) findViewById(R.id.btnStartTask);
         reportBtn=(Button)findViewById(R.id.btnReport);
@@ -153,7 +158,13 @@ public class UserWelcome extends AppCompatActivity {
         rulesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserWelcome.this,AppRules.class));
+                if (appSettings.isPrepared()){
+                    startActivity(new Intent(UserWelcome.this,Task_1.class));
+                }else {
+                    Toast.makeText(getApplicationContext(), appSettings.getVideoID(),
+                            Toast.LENGTH_LONG).show();
+                }
+
             }
         });
     }
