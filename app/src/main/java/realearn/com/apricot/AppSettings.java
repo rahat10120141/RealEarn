@@ -30,6 +30,8 @@ public class AppSettings {
     int add_delay;
     int counter_delay;
 
+    String appID;
+
 
 
     public boolean prepared=false;
@@ -44,7 +46,7 @@ public class AppSettings {
             @Override
             public void onSuccess(String result) {
                 try {
-                    Log.i("result",result);
+                    //Log.i("result",result);
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
                     setImageID(jsonObject.getString("image_add"));
@@ -53,6 +55,7 @@ public class AppSettings {
                     setAdd_delay(jsonObject.getString("add_delay"));
                     setAdd_per_session(jsonObject.getString("add_per_session"));
                     setClick_per_session(jsonObject.getString("click_per_session"));
+                    setAppID(jsonObject.getString("app_id"));
                     if (!getImageID().equals("") && !getVideoID().equals("")){
                         setPrepared(true);
                     }else {
@@ -115,8 +118,8 @@ public class AppSettings {
 
     public boolean isPrepared() {
         String hiddenKey=sharedPreferences.getString(encrypt("prepared"),encrypt("false"));
-        Log.i("result_e",hiddenKey);
-        Log.i("result_d",decrypt(hiddenKey));
+        //Log.i("result","Get Result Encrypted: "+hiddenKey);
+        //Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
         if(decrypt(hiddenKey).equals("false")){
             prepared=false;
         }else{
@@ -128,17 +131,15 @@ public class AppSettings {
     public void setPrepared(boolean prepared) {
         String hiddenKey="";
         if(prepared){
-            Log.i("result","prepared going to be true");
             hiddenKey="true";
+            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
         }else{
-            Log.i("result","prepared going to be false");
             hiddenKey="false";
+            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
         }
-        sharedPreferences.edit().putString(encrypt("prepared"),hiddenKey);
-        Log.i("result_set_r",sharedPreferences.getString("prepared","false"));
-        Log.i("result_set_n",hiddenKey);
-        //sharedPreferences.edit().putBoolean("breaktime",breaktime).commit();
-
+        sharedPreferences.edit().putString(encrypt("prepared"),encrypt(hiddenKey)).commit();
+        //Log.i("result","Encrypted: "+sharedPreferences.getString(encrypt("prepared"),encrypt("false")));
+        //Log.i("result",Boolean.toString(isPrepared()));
     }
 
 
@@ -198,6 +199,16 @@ public class AppSettings {
     public void setCounter_delay(String counter_delay) {
         sharedPreferences.edit().putString(encrypt("counter_delay"),encrypt(counter_delay)).commit();
     }
+
+    public String getAppID() {
+        appID=sharedPreferences.getString(encrypt("appID"),encrypt(""));
+        return decrypt(appID);
+    }
+
+    public void setAppID(String appID) {
+        sharedPreferences.edit().putString(encrypt("appID"),encrypt(appID)).commit();
+    }
+
 
     public String encrypt(String input) {
         // This is base64 encoding, which is not an encryption

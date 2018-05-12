@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -121,16 +122,36 @@ public class UserWelcome extends AppCompatActivity {
         startTaskBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(UserWelcome.this,TaskWindow.class);
+                Intent intent=new Intent(UserWelcome.this,Task_1.class);
                 intent.putExtra("total_impression",Integer.parseInt(impressionTxt.getText().toString()));
-                if (user.isBreaktime()){
+                /*if (user.isBreaktime()){
                     builder.setTitle("Break Time");
                     builder.setMessage("You are on break time. Please come after few time");
                     AlertDialog alertDialog=builder.create();
                     alertDialog.show();
                 }else {
+                    if (appSettings.isPrepared()){
+                        finish();
+                        startActivity(intent);
+                    }else {
+                        Toast.makeText(getApplicationContext(), appSettings.getVideoID(),
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                }*/
+                if(appSettings.isPrepared()){
+                    intent.putExtra("image_add",appSettings.getImageID());
+                    intent.putExtra("video_add",appSettings.getVideoID());
+                    intent.putExtra("ad_waiting_time",appSettings.getAd_waiting_time());
+                    intent.putExtra("add_delay",appSettings.getAdd_delay());
+                    intent.putExtra("add_per_session",appSettings.getAdd_per_session());
+                    intent.putExtra("click_per_session",appSettings.getClick_per_session());
+                    intent.putExtra("app_id",appSettings.getAppID());
                     finish();
                     startActivity(intent);
+                }else {
+                    Toast.makeText(getApplicationContext(), appSettings.getVideoID(),
+                            Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -158,13 +179,7 @@ public class UserWelcome extends AppCompatActivity {
         rulesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (appSettings.isPrepared()){
-                    startActivity(new Intent(UserWelcome.this,Task_1.class));
-                }else {
-                    Toast.makeText(getApplicationContext(), appSettings.getVideoID(),
-                            Toast.LENGTH_LONG).show();
-                }
-
+                startActivity(new Intent(UserWelcome.this,AppRules.class));
             }
         });
     }
