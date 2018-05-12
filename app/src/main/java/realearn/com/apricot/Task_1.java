@@ -34,12 +34,9 @@ import java.util.Map;
 
 public class Task_1 extends AppCompatActivity {
 
-    Button bn,bn2;
-
-
     // Settings Data
     String imageAddID,videoAddID,appID;
-    AdView adView1,adView2,adView3;
+    AdView adView1,adView2;
     int ad_waiting_time,add_delay,add_per_session,click_per_session;
 
     private FirebaseAnalytics firebaseAnalytics;
@@ -55,39 +52,14 @@ public class Task_1 extends AppCompatActivity {
         setContentView(R.layout.activity_task_1);
         InitializeSettings();
         InitializeAdds();
+        prepareBanner();
         PrepareInterstitialAdd();
         prepareVideoAdd();
-        prepareBanner();
-        bn=(Button)findViewById(R.id.button2);
-        bn2=(Button)findViewById(R.id.button3);
+
         user=new User(Task_1.this);
 
         firebaseAnalytics=FirebaseAnalytics.getInstance(Task_1.this);
-        bn2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (interstitialAd.isLoaded()){
-                    interstitialAd.show();
-                    adDelay=new CountDownTimer(5000,1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
 
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            startActivity(new Intent(Task_1.this,Task_2.class));
-                        }
-                    }.start();
-                }
-            }
-        });
-        bn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(Task_1.this,Task_2.class));
-            }
-        });
         MobileAds.initialize(Task_1.this,appID);
         Log.i("result","Video ID : "+videoAddID);
         Log.i("result","Image ID : "+imageAddID);
@@ -153,9 +125,14 @@ public class Task_1 extends AppCompatActivity {
         });
     }
     private void prepareBanner(){
-        /*adView1=(AdView) findViewById(R.id.taskAd1);
+        adView1=(AdView) findViewById(R.id.task_1_ad1);
         AdRequest adRequest1=new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
-        adView1.loadAd(adRequest1);*/
+        adView1.loadAd(adRequest1);
+
+
+        adView2=(AdView) findViewById(R.id.task_1_ad2);
+        AdRequest adRequest2=new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        adView2.loadAd(adRequest2);
     }
     public void prepareVideoAdd(){
         rewardedVideoAd=MobileAds.getRewardedVideoAdInstance(Task_1.this);
