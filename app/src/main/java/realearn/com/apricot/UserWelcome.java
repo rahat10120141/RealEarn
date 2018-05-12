@@ -124,6 +124,7 @@ public class UserWelcome extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(UserWelcome.this,Task_1.class);
                 intent.putExtra("total_impression",Integer.parseInt(impressionTxt.getText().toString()));
+                startActivity(intent);
                 /*if (user.isBreaktime()){
                     builder.setTitle("Break Time");
                     builder.setMessage("You are on break time. Please come after few time");
@@ -139,14 +140,15 @@ public class UserWelcome extends AppCompatActivity {
                     }
 
                 }*/
-                if(appSettings.isPrepared()){
-                    intent.putExtra("image_add",appSettings.getImageID());
+
+                if(user.isPrepared()){
+                    /*intent.putExtra("image_add",appSettings.getImageID());
                     intent.putExtra("video_add",appSettings.getVideoID());
                     intent.putExtra("ad_waiting_time",appSettings.getAd_waiting_time());
                     intent.putExtra("add_delay",appSettings.getAdd_delay());
                     intent.putExtra("add_per_session",appSettings.getAdd_per_session());
                     intent.putExtra("click_per_session",appSettings.getClick_per_session());
-                    intent.putExtra("app_id",appSettings.getAppID());
+                    intent.putExtra("app_id",appSettings.getAppID());*/
                     finish();
                     startActivity(intent);
                 }else {

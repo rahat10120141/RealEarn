@@ -31,16 +31,16 @@ public class AppSettings {
     int counter_delay;
     String appID;
 
-
+    User user;
 
     public boolean prepared=false;
     Context context;
     SharedPreferences sharedPreferences;
-    public AppSettings(){
 
-    }
+
     AppSettings(Context context){
         this.context=context;
+        user=new User(context);
         sharedPreferences=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
 
         GetTaskData(new VolleyCallback(){
@@ -48,19 +48,20 @@ public class AppSettings {
             public void onSuccess(String result) {
                 try {
                     //Log.i("result",result);
+                    user.removeSettings();
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
-                    setImageID(jsonObject.getString("image_add"));
-                    setVideoID(jsonObject.getString("video_add"));
-                    setAd_waiting_time(jsonObject.getString("ad_waiting_time"));
-                    setAdd_delay(jsonObject.getString("add_delay"));
-                    setAdd_per_session(jsonObject.getString("add_per_session"));
-                    setClick_per_session(jsonObject.getString("click_per_session"));
-                    setAppID(jsonObject.getString("app_id"));
-                    if (!getImageID().equals("") && !getVideoID().equals("")){
-                        setPrepared(true);
+                    user.setImageID(jsonObject.getString("image_add"));
+                    user.setVideoID(jsonObject.getString("video_add"));
+                    user.setAd_waiting_time(jsonObject.getString("ad_waiting_time"));
+                    user.setAdd_delay(jsonObject.getString("add_delay"));
+                    user.setAdd_per_session(jsonObject.getString("add_per_session"));
+                    user.setClick_per_session(jsonObject.getString("click_per_session"));
+                    user.setAppID(jsonObject.getString("app_id"));
+                    if (!user.getImageID().equals("") && !user.getVideoID().equals("")){
+                        user.setPrepared(true);
                     }else {
-                        setPrepared(false);
+                        user.setPrepared(false);
                     }
 
 

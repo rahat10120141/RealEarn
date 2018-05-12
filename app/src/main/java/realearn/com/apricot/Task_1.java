@@ -54,7 +54,6 @@ public class Task_1 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_1);
-        appSettings=new AppSettings(Task_1.this);
         user=new User(Task_1.this);
         impressionTxt=(TextView)findViewById(R.id.TxtImpression);
         clicksTxt=(TextView)findViewById(R.id.TxtClickCounter);
@@ -73,24 +72,24 @@ public class Task_1 extends AppCompatActivity {
         click_per_session=getIntent().getIntExtra("click_per_session",3);
         appID=getIntent().getStringExtra("appID");*/
 
+        imageAddID=user.getImageID();
+        videoAddID=user.getVideoID();
+        ad_waiting_time=user.getAd_waiting_time();
+        add_delay=user.getAdd_delay();
+        add_per_session=user.getAdd_per_session();
+        click_per_session=user.getClick_per_session();
+        appID=user.getAppID();
+        impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
+        clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
+        /*if (appSettings.isPrepared()){
 
-        imageAddID=appSettings.getImageID();
-        videoAddID=appSettings.getVideoID();
-        ad_waiting_time=appSettings.getAd_waiting_time();
-        add_delay=appSettings.getAdd_delay();
-        add_per_session=appSettings.getAdd_per_session();
-        click_per_session=appSettings.getClick_per_session();
-        appID=appSettings.getAppID();
-        if (appSettings.isPrepared()){
-            impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
-            clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
             InitializeAdds();
             prepareBanner();
             PrepareInterstitialAdd();
             prepareVideoAdd();
             MobileAds.initialize(Task_1.this,appID);
             StartTask();
-        }
+        }*/
 
     }
 

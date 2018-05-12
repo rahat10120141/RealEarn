@@ -23,11 +23,37 @@ public class User {
 
     private int clickCounter;
 
+    // Apsettings Variables
+
+    public String imageID;
+    public String videoID;
+
+    public boolean prepared=false;
+    int fraud=0;
+    int totImoression;
+    int add_per_session;
+    int click_per_session;
+    int ad_waiting_time;
+    int add_delay;
+    int counter_delay;
+    String appID;
+
     SharedPreferences sharedPreferences;
     SharedPreferences appSettings;
-
+    public User(Context context){
+        this.context=context;
+        sharedPreferences=context.getSharedPreferences(encrypt("realEarn"),context.MODE_PRIVATE);
+        appSettings=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
+        sharedPreferences.edit().remove("breaktime");
+        sharedPreferences.edit().remove("userId");
+        sharedPreferences.edit().remove("adcounter");
+        sharedPreferences.edit().remove("mobile");
+    }
     public void removeUser(){
         sharedPreferences.edit().clear().commit();
+    }
+    public void removeSettings(){
+        appSettings.edit().clear().commit();
     }
 
 
@@ -104,16 +130,118 @@ public class User {
     public void setMobile(String mobile) {
         sharedPreferences.edit().putString(encrypt("mobile"),encrypt(mobile)).commit();
     }
-    public User(Context context){
-        this.context=context;
-        sharedPreferences=context.getSharedPreferences(encrypt("realEarn"),context.MODE_PRIVATE);
-        sharedPreferences=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
-        sharedPreferences.edit().remove("breaktime");
-        sharedPreferences.edit().remove("userId");
-        sharedPreferences.edit().remove("adcounter");
-        sharedPreferences.edit().remove("mobile");
+    public int getFraud() {
+        return fraud;
     }
 
+    public void setFraud(int fraud) {
+        this.fraud = fraud;
+    }
+
+    public int getTotImoression() {
+        return totImoression;
+    }
+
+    public void setTotImoression(int totImoression) {
+        this.totImoression = totImoression;
+    }
+// App Setting Methods
+
+    public String getImageID() {
+        imageID=appSettings.getString(encrypt("imageID"),encrypt(""));
+        return decrypt(imageID);
+    }
+
+    public void setImageID(String imageID) {
+        appSettings.edit().putString(encrypt("imageID"),encrypt(imageID)).commit();
+    }
+
+    public String getVideoID() {
+        videoID=appSettings.getString(encrypt("videoID"),encrypt(""));
+        return decrypt(videoID);
+    }
+
+    public void setVideoID(String videoID) {
+        appSettings.edit().putString(encrypt("videoID"),encrypt(videoID)).commit();
+    }
+
+    public boolean isPrepared() {
+        String hiddenKey=appSettings.getString(encrypt("prepared"),encrypt("false"));
+        //Log.i("result","Get Result Encrypted: "+hiddenKey);
+        //Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
+        if(decrypt(hiddenKey).equals("false")){
+            prepared=false;
+        }else{
+            prepared=true;
+        }
+        return prepared;
+    }
+
+    public void setPrepared(boolean prepared) {
+        String hiddenKey="";
+        if(prepared){
+            hiddenKey="true";
+            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
+        }else{
+            hiddenKey="false";
+            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
+        }
+        appSettings.edit().putString(encrypt("prepared"),encrypt(hiddenKey)).commit();
+        //Log.i("result","Encrypted: "+sharedPreferences.getString(encrypt("prepared"),encrypt("false")));
+        //Log.i("result",Boolean.toString(isPrepared()));
+    }
+
+
+
+    public int getAdd_per_session() {
+        return Integer.parseInt(decrypt(appSettings.getString(encrypt("add_per_session"),encrypt("12"))));
+    }
+
+    public void setAdd_per_session(String add_per_session) {
+        appSettings.edit().putString(encrypt("add_per_session"),encrypt(add_per_session)).commit();
+    }
+
+    public int getClick_per_session() {
+        return Integer.parseInt(decrypt(appSettings.getString(encrypt("click_per_session"),encrypt("3"))));
+    }
+
+    public void setClick_per_session(String click_per_session) {
+        appSettings.edit().putString(encrypt("click_per_session"),encrypt(click_per_session)).commit();
+    }
+
+    public int getAd_waiting_time() {
+        return Integer.parseInt(decrypt(appSettings.getString(encrypt("ad_waiting_time"),encrypt("5000"))));
+    }
+
+    public void setAd_waiting_time(String ad_waiting_time) {
+        appSettings.edit().putString(encrypt("ad_waiting_time"),encrypt(ad_waiting_time)).commit();
+    }
+
+    public int getAdd_delay() {
+        return Integer.parseInt(decrypt(appSettings.getString(encrypt("add_delay"),encrypt("50000"))));
+    }
+
+    public void setAdd_delay(String add_delay) {
+        appSettings.edit().putString(encrypt("add_delay"),encrypt(add_delay)).commit();
+    }
+
+    public int getCounter_delay() {
+        return Integer.parseInt(decrypt(appSettings.getString(encrypt("counter_delay"),encrypt("15000"))));
+    }
+
+    public void setCounter_delay(String counter_delay) {
+        appSettings.edit().putString(encrypt("counter_delay"),encrypt(counter_delay)).commit();
+    }
+
+    public String getAppID() {
+        appID=appSettings.getString(encrypt("appID"),encrypt(""));
+        return decrypt(appID);
+    }
+
+    public void setAppID(String appID) {
+        appSettings.edit().putString(encrypt("appID"),encrypt(appID)).commit();
+    }
+    // Enf Of App Setting
     public String encrypt(String input) {
         // This is base64 encoding, which is not an encryption
         return Base64.encodeToString(input.getBytes(), Base64.DEFAULT);
