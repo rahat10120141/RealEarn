@@ -29,7 +29,6 @@ public class AppSettings {
     int ad_waiting_time;
     int add_delay;
     int counter_delay;
-
     String appID;
 
 
@@ -37,7 +36,9 @@ public class AppSettings {
     public boolean prepared=false;
     Context context;
     SharedPreferences sharedPreferences;
+    public AppSettings(){
 
+    }
     AppSettings(Context context){
         this.context=context;
         sharedPreferences=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
@@ -69,6 +70,8 @@ public class AppSettings {
             }
         });
     }
+
+
     public interface VolleyCallback{
         void onSuccess(String result);
     }

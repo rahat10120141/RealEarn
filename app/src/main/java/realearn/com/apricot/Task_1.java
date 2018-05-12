@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -43,44 +44,86 @@ public class Task_1 extends AppCompatActivity {
     private InterstitialAd interstitialAd;
     private RewardedVideoAd rewardedVideoAd;
 
-    private CountDownTimer adDelay;
+    TextView impressionTxt,clicksTxt,messageTxt,clickViewTxt;
+    private boolean willClick=false;
+    private CountDownTimer adDelay,adWaitingTime;
 
     User user;
+    AppSettings appSettings;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_1);
-        InitializeSettings();
-        InitializeAdds();
-        prepareBanner();
-        PrepareInterstitialAdd();
-        prepareVideoAdd();
-
+        appSettings=new AppSettings(Task_1.this);
         user=new User(Task_1.this);
-
+        impressionTxt=(TextView)findViewById(R.id.TxtImpression);
+        clicksTxt=(TextView)findViewById(R.id.TxtClickCounter);
+        clickViewTxt=(TextView)findViewById(R.id.clickView);
+        messageTxt=(TextView)findViewById(R.id.message);
+        InitializeSettings();
         firebaseAnalytics=FirebaseAnalytics.getInstance(Task_1.this);
-
-        MobileAds.initialize(Task_1.this,appID);
-        Log.i("result","Video ID : "+videoAddID);
-        Log.i("result","Image ID : "+imageAddID);
-        Log.i("result","Ad Waiting Time: "+Integer.toString(ad_waiting_time));
-        Log.i("result","add_delay: "+Integer.toString(add_delay));
-        Log.i("result","add_per_session: "+Integer.toString(add_per_session));
-        Log.i("result","click_per_session: "+Integer.toString(click_per_session));
-        Log.i("result","appID: "+appID);
-        // Setting Initilizing
-
-
     }
+
     private void InitializeSettings(){
-        imageAddID=getIntent().getStringExtra("image_add");
+        /*imageAddID=getIntent().getStringExtra("image_add");
         videoAddID=getIntent().getStringExtra("video_add");
         ad_waiting_time=getIntent().getIntExtra("ad_waiting_time",5000);
         add_delay=getIntent().getIntExtra("add_delay",6000);
         add_per_session=getIntent().getIntExtra("add_per_session",12);
         click_per_session=getIntent().getIntExtra("click_per_session",3);
-        appID=getIntent().getStringExtra("appID");
+        appID=getIntent().getStringExtra("appID");*/
+
+
+        imageAddID=appSettings.getImageID();
+        videoAddID=appSettings.getVideoID();
+        ad_waiting_time=appSettings.getAd_waiting_time();
+        add_delay=appSettings.getAdd_delay();
+        add_per_session=appSettings.getAdd_per_session();
+        click_per_session=appSettings.getClick_per_session();
+        appID=appSettings.getAppID();
+        if (appSettings.isPrepared()){
+            impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
+            clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
+            InitializeAdds();
+            prepareBanner();
+            PrepareInterstitialAdd();
+            prepareVideoAdd();
+            MobileAds.initialize(Task_1.this,appID);
+            StartTask();
+        }
+
     }
+
+    private void StartTask(){
+        adDelay=new CountDownTimer(add_delay,1000) {
+            @Override
+            public void onTick(long l) {
+                if (interstitialAd.isLoaded()){
+                    messageTxt.setText("Add Is Loaded Please Wait till it shows on the Screen");
+                }
+            }
+            @Override
+            public void onFinish() {
+                if (interstitialAd.isLoaded()){
+                    interstitialAd.show();
+                    adWaitingTime=new CountDownTimer(ad_waiting_time,1000) {
+                        @Override
+                        public void onTick(long l) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            user.setAdcounter(user.getClickCounter()+1);
+                            finish();
+                            startActivity(new Intent(Task_1.this,Task_2.class));
+                        }
+                    }.start();
+                }
+            }
+        }.start();
+    }
+
     private void InitializeAdds(){
        //------------------------------- Intertetial Add ------------------------------------------------
         interstitialAd=new InterstitialAd(Task_1.this);

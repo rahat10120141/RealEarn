@@ -24,6 +24,7 @@ public class User {
     private int clickCounter;
 
     SharedPreferences sharedPreferences;
+    SharedPreferences appSettings;
 
     public void removeUser(){
         sharedPreferences.edit().clear().commit();
@@ -106,6 +107,7 @@ public class User {
     public User(Context context){
         this.context=context;
         sharedPreferences=context.getSharedPreferences(encrypt("realEarn"),context.MODE_PRIVATE);
+        sharedPreferences=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
         sharedPreferences.edit().remove("breaktime");
         sharedPreferences.edit().remove("userId");
         sharedPreferences.edit().remove("adcounter");
