@@ -102,6 +102,13 @@ public class UserWelcome extends AppCompatActivity {
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
                     user.setBreaktime(jsonObject.getString("break_status").toString().equals("1")?true:false);
+                    /*if (jsonObject.getString("break_status").equals("1")){
+                        user.setBreaktime(true);
+                    }else {
+                        user.setBreaktime(false);
+                    }*/
+                    Log.i("breakS","Pref File: "+Boolean.toString(user.isBreaktime()));
+                    Log.i("breakS","Json File: "+jsonObject.getString("break_status"));
                     if(verCode<Integer.parseInt(jsonObject.getString("version_code").toString())){
                         final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
                         try {
@@ -134,6 +141,9 @@ public class UserWelcome extends AppCompatActivity {
                     alertDialog.show();
                 }else {
                     if (user.isPrepared()){
+                        // Must Delete Before Upload
+                        //user.setClickCounter(0);    //************
+                        //user.setAdcounter(0);       //***********
                         finish();
                         startActivity(intent);
                     }else {

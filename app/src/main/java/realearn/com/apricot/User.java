@@ -43,40 +43,36 @@ public class User {
     String appID;
 
     SharedPreferences sharedPreferences;
-    SharedPreferences appSettings;
     public User(Context context){
         this.context=context;
         sharedPreferences=context.getSharedPreferences(encrypt("realEarn"),context.MODE_PRIVATE);
-        appSettings=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
     }
     public void removeUser(){
         sharedPreferences.edit().clear().commit();
         context.getSharedPreferences("realEarn",context.MODE_PRIVATE).edit().clear().commit();
     }
-    public void removeSettings(){
-        appSettings.edit().clear().commit();
-    }
-
-
     public boolean isBreaktime() {
         String hiddenKey=sharedPreferences.getString(encrypt("breaktime"),encrypt("false"));
-        if(hiddenKey.equals(encrypt("false"))){
-            breaktime=false;
+        //Log.i("result","Get Result Encrypted: "+hiddenKey);
+        //Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
+        if(decrypt(hiddenKey).equals("false")){
+            prepared=false;
         }else{
-            breaktime=true;
+            prepared=true;
         }
-        return breaktime;
+        return prepared;
     }
 
     public void setBreaktime(boolean breaktime) {
         String hiddenKey="";
-        if(breaktime){
+        if(prepared){
             hiddenKey="true";
+            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
         }else{
             hiddenKey="false";
+            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
         }
-        sharedPreferences.edit().putString(encrypt("breaktime"),hiddenKey);
-        //sharedPreferences.edit().putBoolean("breaktime",breaktime).commit();
+        sharedPreferences.edit().putString(encrypt("breaktime"),encrypt(hiddenKey)).commit();
     }
 
     public boolean isAdclicked() {
@@ -147,25 +143,25 @@ public class User {
     // App Setting Methods
 
     public String getImageID() {
-        imageID=appSettings.getString(encrypt("imageID"),encrypt(""));
+        imageID=sharedPreferences.getString(encrypt("imageID"),encrypt(""));
         return decrypt(imageID);
     }
 
     public void setImageID(String imageID) {
-        appSettings.edit().putString(encrypt("imageID"),encrypt(imageID)).commit();
+        sharedPreferences.edit().putString(encrypt("imageID"),encrypt(imageID)).commit();
     }
 
     public String getVideoID() {
-        videoID=appSettings.getString(encrypt("videoID"),encrypt(""));
+        videoID=sharedPreferences.getString(encrypt("videoID"),encrypt(""));
         return decrypt(videoID);
     }
 
     public void setVideoID(String videoID) {
-        appSettings.edit().putString(encrypt("videoID"),encrypt(videoID)).commit();
+        sharedPreferences.edit().putString(encrypt("videoID"),encrypt(videoID)).commit();
     }
 
     public boolean isPrepared() {
-        String hiddenKey=appSettings.getString(encrypt("prepared"),encrypt("false"));
+        String hiddenKey=sharedPreferences.getString(encrypt("prepared"),encrypt("false"));
         //Log.i("result","Get Result Encrypted: "+hiddenKey);
         //Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
         if(decrypt(hiddenKey).equals("false")){
@@ -185,7 +181,7 @@ public class User {
             hiddenKey="false";
             //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
         }
-        appSettings.edit().putString(encrypt("prepared"),encrypt(hiddenKey)).commit();
+        sharedPreferences.edit().putString(encrypt("prepared"),encrypt(hiddenKey)).commit();
         //Log.i("result","Encrypted: "+sharedPreferences.getString(encrypt("prepared"),encrypt("false")));
         //Log.i("result",Boolean.toString(isPrepared()));
     }
@@ -193,78 +189,78 @@ public class User {
 
 
     public int getAdd_per_session() {
-        return Integer.parseInt(decrypt(appSettings.getString(encrypt("add_per_session"),encrypt("12"))));
+        return Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("add_per_session"),encrypt("12"))));
     }
 
     public void setAdd_per_session(String add_per_session) {
-        appSettings.edit().putString(encrypt("add_per_session"),encrypt(add_per_session)).commit();
+        sharedPreferences.edit().putString(encrypt("add_per_session"),encrypt(add_per_session)).commit();
     }
 
     public int getClick_per_session() {
-        return Integer.parseInt(decrypt(appSettings.getString(encrypt("click_per_session"),encrypt("3"))));
+        return Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("click_per_session"),encrypt("3"))));
     }
 
     public void setClick_per_session(String click_per_session) {
-        appSettings.edit().putString(encrypt("click_per_session"),encrypt(click_per_session)).commit();
+        sharedPreferences.edit().putString(encrypt("click_per_session"),encrypt(click_per_session)).commit();
     }
 
     public int getAd_waiting_time() {
-        return Integer.parseInt(decrypt(appSettings.getString(encrypt("ad_waiting_time"),encrypt("5000"))));
+        return Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("ad_waiting_time"),encrypt("5000"))));
     }
 
     public void setAd_waiting_time(String ad_waiting_time) {
-        appSettings.edit().putString(encrypt("ad_waiting_time"),encrypt(ad_waiting_time)).commit();
+        sharedPreferences.edit().putString(encrypt("ad_waiting_time"),encrypt(ad_waiting_time)).commit();
     }
 
     public int getAdd_delay() {
-        return Integer.parseInt(decrypt(appSettings.getString(encrypt("add_delay"),encrypt("50000"))));
+        return Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("add_delay"),encrypt("50000"))));
     }
 
     public void setAdd_delay(String add_delay) {
-        appSettings.edit().putString(encrypt("add_delay"),encrypt(add_delay)).commit();
+        sharedPreferences.edit().putString(encrypt("add_delay"),encrypt(add_delay)).commit();
     }
 
     public int getCounter_delay() {
-        return Integer.parseInt(decrypt(appSettings.getString(encrypt("counter_delay"),encrypt("15000"))));
+        return Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("counter_delay"),encrypt("15000"))));
     }
 
     public void setCounter_delay(String counter_delay) {
-        appSettings.edit().putString(encrypt("counter_delay"),encrypt(counter_delay)).commit();
+        sharedPreferences.edit().putString(encrypt("counter_delay"),encrypt(counter_delay)).commit();
     }
 
     public String getAppID() {
-        appID=appSettings.getString(encrypt("appID"),encrypt(""));
+        appID=sharedPreferences.getString(encrypt("appID"),encrypt(""));
         return decrypt(appID);
     }
 
     public void setAppID(String appID) {
-        appSettings.edit().putString(encrypt("appID"),encrypt(appID)).commit();
+        sharedPreferences.edit().putString(encrypt("appID"),encrypt(appID)).commit();
     }
 
     public int getClickReturnTime() {
-        return Integer.parseInt(decrypt(appSettings.getString(encrypt("clickReturnTime"),encrypt("30000"))));
+        return Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("clickReturnTime"),encrypt("30000"))));
     }
 
     public void setClickReturnTime(String clickReturnTime) {
-        appSettings.edit().putString(encrypt("clickReturnTime"),encrypt(clickReturnTime)).commit();
+        sharedPreferences.edit().putString(encrypt("clickReturnTime"),encrypt(clickReturnTime)).commit();
     }
 
     public String getClickIndexes() {
-        clickIndexes=appSettings.getString(encrypt("clickIndexes"),encrypt("1,5,7"));
+        clickIndexes=sharedPreferences.getString(encrypt("clickIndexes"),encrypt("1,5,7"));
         return decrypt(clickIndexes);
     }
 
     public void setClickIndexes(String clickIndexes) {
-        appSettings.edit().putString(encrypt("clickIndexes"),encrypt(clickIndexes)).commit();
+        sharedPreferences.edit().putString(encrypt("clickIndexes"),encrypt(clickIndexes)).commit();
     }
 
     public String getvideoIndexes() {
-        videoIndexes=appSettings.getString(encrypt("videoIndexes"),encrypt("9"));
+        videoIndexes=sharedPreferences.getString(encrypt("videoIndexes"),encrypt("9"));
         return decrypt(videoIndexes);
     }
 
     public void setvideoIndexes(String videoIndexes) {
-        appSettings.edit().putString(encrypt("videoIndexes"),encrypt(videoIndexes)).commit();
+        sharedPreferences.edit().putString(encrypt("videoIndexes"),encrypt(videoIndexes)).commit();
     }
 
     // Enf Of App Setting
