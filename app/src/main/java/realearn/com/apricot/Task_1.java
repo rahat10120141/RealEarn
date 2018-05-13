@@ -2,6 +2,7 @@ package realearn.com.apricot;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +32,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 public class Task_1 extends AppCompatActivity {
@@ -38,7 +41,9 @@ public class Task_1 extends AppCompatActivity {
     // Settings Data
     String imageAddID,videoAddID,appID;
     AdView adView1,adView2;
-    int ad_waiting_time,add_delay,add_per_session,click_per_session;
+    int ad_waiting_time,add_delay,add_per_session,click_per_session,clickReturnTime;
+    String[] clickIndexes;
+    String[] videoIndexes;
 
     private FirebaseAnalytics firebaseAnalytics;
     private InterstitialAd interstitialAd;
@@ -46,28 +51,46 @@ public class Task_1 extends AppCompatActivity {
 
     TextView impressionTxt,clicksTxt,messageTxt,clickViewTxt;
     private boolean willClick=false;
-    private CountDownTimer adDelay,adWaitingTime;
+    private CountDownTimer adDelay,adWaitingTime,clickTimer;
 
     User user;
     AppSettings appSettings;
-    private boolean test=true;
+
+    AlertDialog.Builder builder;
+
+
+    UpdateData updateData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_1);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         user=new User(Task_1.this);
+        updateData=new UpdateData(Task_1.this);
+
         impressionTxt=(TextView)findViewById(R.id.TxtImpression);
         clicksTxt=(TextView)findViewById(R.id.TxtClickCounter);
         clickViewTxt=(TextView)findViewById(R.id.clickView);
         messageTxt=(TextView)findViewById(R.id.message);
         messageTxt.setText("Task Window 1");
-        if (user.getAdcounter()%user.getClick_per_session()==0 && user.getAdcounter()!=0){
+        clickIndexes=user.getClickIndexes().split(",");
+        videoIndexes=user.getClickIndexes().split(",");
+        isThisForClick(2);
+        //Log.i("result","ad_waiting_time:"+user.getAd_waiting_time());
+        //Log.i("result","click Indexes:"+user.getClickIndexes());
+        //Log.i("result","Video Indexes:"+user.getvideoIndexes());
+        //Log.i("result","click_return_time:"+user.getClickReturnTime());
+
+        String[] parts = user.getClickIndexes().split("-");
+        if (isThisForClick(user.getAdcounter())){
             clickViewTxt.setText("Click Add");
         }else{
             clickViewTxt.setText("View Add");
         }
         InitializeSettings();
         firebaseAnalytics=FirebaseAnalytics.getInstance(Task_1.this);
+
+        builder=new AlertDialog.Builder(Task_1.this);
     }
 
     private void InitializeSettings(){
@@ -85,6 +108,7 @@ public class Task_1 extends AppCompatActivity {
         add_delay=user.getAdd_delay();
         add_per_session=user.getAdd_per_session();
         click_per_session=user.getClick_per_session();
+        clickReturnTime=user.getClickReturnTime();
         appID=user.getAppID();
         impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
         clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
@@ -109,35 +133,49 @@ public class Task_1 extends AppCompatActivity {
             }
             @Override
             public void onFinish() {
+                if (isItForVideoAdd(user.getAdcounter())){
+                    if (rewardedVideoAd.isLoaded()){
+                        rewardedVideoAd.show();
+                    }else {
+                        if (!isThisForClick(user.getAdcounter())){
+                            interstitialAd.show();
+                            adWaitingTime=new CountDownTimer(ad_waiting_time,1000) {
+                                @Override
+                                public void onTick(long l) {
 
-                if (test){
-                    //interstitialAd.show();
-                    adWaitingTime=new CountDownTimer(ad_waiting_time,1000) {
-                        @Override
-                        public void onTick(long l) {
+                                }
 
+                                @Override
+                                public void onFinish() {
+                                    user.setAdcounter(user.getAdcounter()+1);
+                                    updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                                    CheckUserBreak();
+                                }
+                            }.start();
+                        }else{
+                            interstitialAd.show();
                         }
+                    }
+                }
+                if (interstitialAd.isLoaded()){
+                    if (!isThisForClick(user.getAdcounter())){
+                        interstitialAd.show();
+                        adWaitingTime=new CountDownTimer(ad_waiting_time,1000) {
+                            @Override
+                            public void onTick(long l) {
 
-                        @Override
-                        public void onFinish() {
-                            user.setAdcounter(user.getAdcounter()+1);
-                            // must Delete After Test
-                            if (user.getAdcounter()%user.getClick_per_session()==0 && user.getAdcounter()!=0){
-                                user.setClickCounter(user.getClickCounter()+1);
-                            }   //**********************
-
-
-                            if (user.getAdcounter()==user.getAdd_per_session()){
-                                user.setBreaktime(true);
-                                finish();
-                                startActivity(new Intent(Task_1.this,UserWelcome.class));
-                            }else{
-                                finish();
-                                startActivity(new Intent(Task_1.this,Task_2.class));
                             }
 
-                        }
-                    }.start();
+                            @Override
+                            public void onFinish() {
+                                user.setAdcounter(user.getAdcounter()+1);
+                                updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                                CheckUserBreak();
+                            }
+                        }.start();
+                    }else{
+                        interstitialAd.show();
+                    }
                 }
             }
         }.start();
@@ -163,7 +201,10 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onAdClosed() {
-
+                if (isThisForClick(user.getAdcounter())){
+                    messageTxt.setText("You Have To Click This Add, Do not Close It");
+                    InitializeAdds();
+                }
 
                 super.onAdClosed();
             }
@@ -181,6 +222,28 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onAdLeftApplication() {
+                if (isThisForClick(user.getAdcounter())){
+                    clickTimer=new CountDownTimer(clickReturnTime,1000) {
+                        @Override
+                        public void onTick(long l) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            user.setAdcounter(user.getAdcounter()+1);
+                            user.setClickCounter(user.getClickCounter()+1);
+                            updateData.ProcessInterstitialAdd(user.getAdcounter(),"click");
+                            CheckUserBreak();
+                        }
+                    }.start();
+
+                }else{
+                    builder.setTitle("Wrong!!");
+                    builder.setMessage("You have Clicked The Wrong Add");
+                    AlertDialog alertDialog=builder.create();
+                    alertDialog.show();
+                }
                 super.onAdLeftApplication();
             }
 
@@ -207,7 +270,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onRewardedVideoAdOpened() {
-
+                Log.i("video","Video Playing");
             }
 
             @Override
@@ -237,7 +300,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onRewardedVideoCompleted() {
-
+                Log.i("video","Video Competed");
             }
         });
     }
@@ -245,6 +308,34 @@ public class Task_1 extends AppCompatActivity {
         rewardedVideoAd.loadAd(videoAddID,
                 new AdRequest.Builder().build());
 
+    }
+    private boolean isThisForClick(int addcounter){
+        List valid = Arrays.asList(clickIndexes);
+        if (valid.contains(Integer.toString(addcounter))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean isItForVideoAdd(int addcounter){
+        List valid = Arrays.asList(clickIndexes);
+        if (valid.contains(Integer.toString(addcounter))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    private void CheckUserBreak(){
+        if (user.getAdcounter()>=user.getAdd_per_session()){
+            updateData.UpdateBreak();
+            user.setBreaktime(true);
+            finish();
+            startActivity(new Intent(Task_1.this,UserWelcome.class));
+        }else{
+            finish();
+            startActivity(new Intent(Task_1.this,Task_2.class));
+        }
     }
 
 }

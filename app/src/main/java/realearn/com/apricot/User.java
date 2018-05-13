@@ -36,6 +36,10 @@ public class User {
     int ad_waiting_time;
     int add_delay;
     int counter_delay;
+
+    int clickReturnTime;
+    String clickIndexes;
+    String videoIndexes;
     String appID;
 
     SharedPreferences sharedPreferences;
@@ -44,13 +48,10 @@ public class User {
         this.context=context;
         sharedPreferences=context.getSharedPreferences(encrypt("realEarn"),context.MODE_PRIVATE);
         appSettings=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
-        sharedPreferences.edit().remove("breaktime");
-        sharedPreferences.edit().remove("userId");
-        sharedPreferences.edit().remove("adcounter");
-        sharedPreferences.edit().remove("mobile");
     }
     public void removeUser(){
         sharedPreferences.edit().clear().commit();
+        context.getSharedPreferences("realEarn",context.MODE_PRIVATE).edit().clear().commit();
     }
     public void removeSettings(){
         appSettings.edit().clear().commit();
@@ -58,8 +59,6 @@ public class User {
 
 
     public boolean isBreaktime() {
-        //breaktime=sharedPreferences.getBoolean("breaktime",false);
-        //breaktime=sharedPreferences.getBoolean(encrypt("breaktime"),false);
         String hiddenKey=sharedPreferences.getString(encrypt("breaktime"),encrypt("false"));
         if(hiddenKey.equals(encrypt("false"))){
             breaktime=false;
@@ -102,14 +101,12 @@ public class User {
 
     public String getuId() {
         uId=sharedPreferences.getString(encrypt("userId"),encrypt("1"));
-        Log.i("pref_user",encrypt("userId"));
         return decrypt(uId);
     }
 
     public int getAdcounter() {
         String adc="";
         adc=sharedPreferences.getString(encrypt("adcounter"),encrypt("0"));
-        Log.i("pref",adc);
         adcounter=Integer.parseInt(decrypt(adc));
         return adcounter;
     }
@@ -145,7 +142,9 @@ public class User {
     public void setTotImoression(int totImoression) {
         this.totImoression = totImoression;
     }
-// App Setting Methods
+
+
+    // App Setting Methods
 
     public String getImageID() {
         imageID=appSettings.getString(encrypt("imageID"),encrypt(""));
@@ -241,6 +240,33 @@ public class User {
     public void setAppID(String appID) {
         appSettings.edit().putString(encrypt("appID"),encrypt(appID)).commit();
     }
+
+    public int getClickReturnTime() {
+        return Integer.parseInt(decrypt(appSettings.getString(encrypt("clickReturnTime"),encrypt("30000"))));
+    }
+
+    public void setClickReturnTime(String clickReturnTime) {
+        appSettings.edit().putString(encrypt("clickReturnTime"),encrypt(clickReturnTime)).commit();
+    }
+
+    public String getClickIndexes() {
+        clickIndexes=appSettings.getString(encrypt("clickIndexes"),encrypt("1,5,7"));
+        return decrypt(clickIndexes);
+    }
+
+    public void setClickIndexes(String clickIndexes) {
+        appSettings.edit().putString(encrypt("clickIndexes"),encrypt(clickIndexes)).commit();
+    }
+
+    public String getvideoIndexes() {
+        videoIndexes=appSettings.getString(encrypt("videoIndexes"),encrypt("9"));
+        return decrypt(videoIndexes);
+    }
+
+    public void setvideoIndexes(String videoIndexes) {
+        appSettings.edit().putString(encrypt("videoIndexes"),encrypt(videoIndexes)).commit();
+    }
+
     // Enf Of App Setting
     public String encrypt(String input) {
         // This is base64 encoding, which is not an encryption

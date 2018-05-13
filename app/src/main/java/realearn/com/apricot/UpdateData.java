@@ -34,7 +34,7 @@ public class UpdateData {
         //builder=new AlertDialog.Builder(context);
     }
 
-    public void ProcessInterstitialAdd(final int adCount){
+    public void ProcessInterstitialAdd(final int adCount,final String activityType){
             stringRequest=new StringRequest(Request.Method.POST, Appurls.image_add_view_success, new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -55,13 +55,8 @@ public class UpdateData {
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String,String> params=new HashMap<String, String>();
-                    if (adCount==13){
-                        user.setAdcounter(0);
-                        user.setBreaktime(true);
-                        UpdateBreak();
-                    }
                     params.put("uid",uid);
-                    params.put("activity_type","view");
+                    params.put("activity_type",activityType);
                     return params;
                 }
             };
@@ -88,11 +83,6 @@ public class UpdateData {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String,String> params=new HashMap<String, String>();
-                if (adCount==13){
-                    user.setAdcounter(0);
-                    user.setBreaktime(true);
-                    UpdateBreak();
-                }
                 params.put("uid",uid);
                 params.put("activity_type","view");
                 return params;

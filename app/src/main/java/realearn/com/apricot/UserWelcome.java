@@ -69,6 +69,9 @@ public class UserWelcome extends AppCompatActivity {
         user=new User(UserWelcome.this);
         uid=user.getuId();
 
+        Log.i("result",Integer.toString(user.getAdcounter()));
+
+
         appSettings=new AppSettings(UserWelcome.this);
 
         startTaskBtn=(Button) findViewById(R.id.btnStartTask);
@@ -124,40 +127,20 @@ public class UserWelcome extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(UserWelcome.this,Task_1.class);
                 intent.putExtra("total_impression",Integer.parseInt(impressionTxt.getText().toString()));
-                // Must Delete After Test
-                user.setAdcounter(0);  // ******************
-                user.setClickCounter(0);    // *****************
-
-                startActivity(intent);
-                /*if (user.isBreaktime()){
+                if (user.isBreaktime()){
                     builder.setTitle("Break Time");
                     builder.setMessage("You are on break time. Please come after few time");
                     AlertDialog alertDialog=builder.create();
                     alertDialog.show();
                 }else {
-                    if (appSettings.isPrepared()){
+                    if (user.isPrepared()){
                         finish();
                         startActivity(intent);
                     }else {
-                        Toast.makeText(getApplicationContext(), appSettings.getVideoID(),
+                        Toast.makeText(getApplicationContext(),"Wait App Is not Prepared Yet",
                                 Toast.LENGTH_LONG).show();
                     }
 
-                }*/
-
-                if(user.isPrepared()){
-                    /*intent.putExtra("image_add",appSettings.getImageID());
-                    intent.putExtra("video_add",appSettings.getVideoID());
-                    intent.putExtra("ad_waiting_time",appSettings.getAd_waiting_time());
-                    intent.putExtra("add_delay",appSettings.getAdd_delay());
-                    intent.putExtra("add_per_session",appSettings.getAdd_per_session());
-                    intent.putExtra("click_per_session",appSettings.getClick_per_session());
-                    intent.putExtra("app_id",appSettings.getAppID());*/
-                    finish();
-                    startActivity(intent);
-                }else {
-                    Toast.makeText(getApplicationContext(),"Task Is not Prepared Yet",
-                            Toast.LENGTH_LONG).show();
                 }
             }
         });

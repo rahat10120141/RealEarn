@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -18,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     TextView txt;
     RequestQueue requestQueue;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         login_btn=(Button)findViewById(R.id.btn_login);
         register_btn=(Button)findViewById(R.id.btn_register);
         txt=(TextView) findViewById(R.id.response);
+        //user.removeSettings();
+        //user.removeUser();
         if (user.getuId()!=null){
             finish();
             startActivity(new Intent(MainActivity.this,UserWelcome.class));

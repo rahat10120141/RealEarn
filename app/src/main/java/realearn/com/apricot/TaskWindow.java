@@ -333,7 +333,7 @@ public class TaskWindow extends AppCompatActivity {
                     PrepareInterstitialAdd();
                     user.setAdcounter(user.getAdcounter()+1);
                     totImoression+=1;
-                    updateData.ProcessInterstitialAdd(user.getAdcounter());
+                    updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
                     impression.setText(Integer.toString(user.getAdcounter())+"/"+add_per_session);
                     message.setText("Please Wait Ad Will be loaded !!");
                     safeToClose.cancel();

@@ -47,7 +47,6 @@ public class AppSettings {
             @Override
             public void onSuccess(String result) {
                 try {
-                    //Log.i("result",result);
                     //user.removeSettings();
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
@@ -57,6 +56,10 @@ public class AppSettings {
                     user.setAdd_delay(jsonObject.getString("add_delay"));
                     user.setAdd_per_session(jsonObject.getString("add_per_session"));
                     user.setClick_per_session(jsonObject.getString("click_per_session"));
+                    user.setClickIndexes(jsonObject.getString("click_indexes"));
+                    user.setvideoIndexes(jsonObject.getString("video_indexes"));
+                    //user.setvideoIndexes("0222");
+                    user.setClickReturnTime(jsonObject.getString("click_return_time"));
                     user.setAppID(jsonObject.getString("app_id"));
                     if (!user.getImageID().equals("") && !user.getVideoID().equals("")){
                         user.setPrepared(true);
