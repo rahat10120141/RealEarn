@@ -50,6 +50,7 @@ public class Task_1 extends AppCompatActivity {
 
     User user;
     AppSettings appSettings;
+    private boolean test=true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +60,12 @@ public class Task_1 extends AppCompatActivity {
         clicksTxt=(TextView)findViewById(R.id.TxtClickCounter);
         clickViewTxt=(TextView)findViewById(R.id.clickView);
         messageTxt=(TextView)findViewById(R.id.message);
+        messageTxt.setText("Task Window 1");
+        if (user.getAdcounter()%user.getClick_per_session()==0 && user.getAdcounter()!=0){
+            clickViewTxt.setText("Click Add");
+        }else{
+            clickViewTxt.setText("View Add");
+        }
         InitializeSettings();
         firebaseAnalytics=FirebaseAnalytics.getInstance(Task_1.this);
     }
@@ -81,15 +88,14 @@ public class Task_1 extends AppCompatActivity {
         appID=user.getAppID();
         impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
         clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
-        /*if (appSettings.isPrepared()){
-
+        if (user.isPrepared()){
             InitializeAdds();
             prepareBanner();
             PrepareInterstitialAdd();
             prepareVideoAdd();
             MobileAds.initialize(Task_1.this,appID);
             StartTask();
-        }*/
+        }
 
     }
 
@@ -103,8 +109,9 @@ public class Task_1 extends AppCompatActivity {
             }
             @Override
             public void onFinish() {
-                if (interstitialAd.isLoaded()){
-                    interstitialAd.show();
+
+                if (test){
+                    //interstitialAd.show();
                     adWaitingTime=new CountDownTimer(ad_waiting_time,1000) {
                         @Override
                         public void onTick(long l) {
@@ -113,9 +120,22 @@ public class Task_1 extends AppCompatActivity {
 
                         @Override
                         public void onFinish() {
-                            user.setAdcounter(user.getClickCounter()+1);
-                            finish();
-                            startActivity(new Intent(Task_1.this,Task_2.class));
+                            user.setAdcounter(user.getAdcounter()+1);
+                            // must Delete After Test
+                            if (user.getAdcounter()%user.getClick_per_session()==0 && user.getAdcounter()!=0){
+                                user.setClickCounter(user.getClickCounter()+1);
+                            }   //**********************
+
+
+                            if (user.getAdcounter()==user.getAdd_per_session()){
+                                user.setBreaktime(true);
+                                finish();
+                                startActivity(new Intent(Task_1.this,UserWelcome.class));
+                            }else{
+                                finish();
+                                startActivity(new Intent(Task_1.this,Task_2.class));
+                            }
+
                         }
                     }.start();
                 }

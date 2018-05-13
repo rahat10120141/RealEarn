@@ -124,6 +124,10 @@ public class UserWelcome extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(UserWelcome.this,Task_1.class);
                 intent.putExtra("total_impression",Integer.parseInt(impressionTxt.getText().toString()));
+                // Must Delete After Test
+                user.setAdcounter(0);  // ******************
+                user.setClickCounter(0);    // *****************
+
                 startActivity(intent);
                 /*if (user.isBreaktime()){
                     builder.setTitle("Break Time");
@@ -152,7 +156,7 @@ public class UserWelcome extends AppCompatActivity {
                     finish();
                     startActivity(intent);
                 }else {
-                    Toast.makeText(getApplicationContext(), appSettings.getVideoID(),
+                    Toast.makeText(getApplicationContext(),"Task Is not Prepared Yet",
                             Toast.LENGTH_LONG).show();
                 }
             }

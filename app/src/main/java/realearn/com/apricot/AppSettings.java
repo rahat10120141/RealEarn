@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class AppSettings {
 
-    public String imageID;
+    /*public String imageID;
     public String videoID;
 
     int fraud=0;
@@ -29,26 +29,26 @@ public class AppSettings {
     int ad_waiting_time;
     int add_delay;
     int counter_delay;
-    String appID;
+    String appID;*/
 
     User user;
 
     public boolean prepared=false;
     Context context;
-    SharedPreferences sharedPreferences;
+    //SharedPreferences sharedPreferences;
 
 
     AppSettings(Context context){
         this.context=context;
         user=new User(context);
-        sharedPreferences=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
+        //sharedPreferences=context.getSharedPreferences(encrypt("AppSetting"),context.MODE_PRIVATE);
 
         GetTaskData(new VolleyCallback(){
             @Override
             public void onSuccess(String result) {
                 try {
                     //Log.i("result",result);
-                    user.removeSettings();
+                    //user.removeSettings();
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
                     user.setImageID(jsonObject.getString("image_add"));
@@ -102,6 +102,7 @@ public class AppSettings {
         };
         Mysingleton.getmInstance(context).AddToRequestQue(stringRequest);
     }
+    /*
     public String getImageID() {
         imageID=sharedPreferences.getString(encrypt("imageID"),encrypt(""));
         return decrypt(imageID);
@@ -222,4 +223,5 @@ public class AppSettings {
     public String decrypt(String input) {
         return new String(Base64.decode(input, Base64.DEFAULT));
     }
+    */
 }
