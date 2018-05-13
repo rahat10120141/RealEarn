@@ -53,24 +53,24 @@ public class User {
     }
     public boolean isBreaktime() {
         String hiddenKey=sharedPreferences.getString(encrypt("breaktime"),encrypt("false"));
-        //Log.i("result","Get Result Encrypted: "+hiddenKey);
-        //Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
+        Log.i("result","Get Result Encrypted: "+hiddenKey);
+        Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
         if(decrypt(hiddenKey).equals("false")){
-            prepared=false;
+            breaktime=false;
         }else{
-            prepared=true;
+            breaktime=true;
         }
-        return prepared;
+        return breaktime;
     }
 
     public void setBreaktime(boolean breaktime) {
         String hiddenKey="";
-        if(prepared){
+        if(breaktime){
             hiddenKey="true";
-            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
+            Log.i("result","Value Tobe Encrypted: "+hiddenKey);
         }else{
             hiddenKey="false";
-            //Log.i("result","Value Tobe Encrypted: "+hiddenKey);
+            Log.i("result","Value Tobe Encrypted: "+hiddenKey);
         }
         sharedPreferences.edit().putString(encrypt("breaktime"),encrypt(hiddenKey)).commit();
     }

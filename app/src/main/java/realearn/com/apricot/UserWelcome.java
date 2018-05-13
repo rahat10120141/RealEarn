@@ -107,8 +107,8 @@ public class UserWelcome extends AppCompatActivity {
                     }else {
                         user.setBreaktime(false);
                     }*/
-                    Log.i("breakS","Pref File: "+Boolean.toString(user.isBreaktime()));
-                    Log.i("breakS","Json File: "+jsonObject.getString("break_status"));
+                    Log.i("result","Pref File: "+Boolean.toString(user.isBreaktime()));
+                    Log.i("result","Json File: "+jsonObject.getString("break_status"));
                     if(verCode<Integer.parseInt(jsonObject.getString("version_code").toString())){
                         final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
                         try {
