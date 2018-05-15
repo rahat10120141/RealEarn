@@ -58,6 +58,7 @@ public class AppSettings {
                     user.setClick_per_session(jsonObject.getString("click_per_session"));
                     user.setClickIndexes(jsonObject.getString("click_indexes"));
                     user.setvideoIndexes(jsonObject.getString("video_indexes"));
+                    user.setImage_ids_for_click(jsonObject.getString("image_ids_for_click"));
                     //user.setvideoIndexes("0222");
                     user.setClickReturnTime(jsonObject.getString("click_return_time"));
                     user.setAppID(jsonObject.getString("app_id"));

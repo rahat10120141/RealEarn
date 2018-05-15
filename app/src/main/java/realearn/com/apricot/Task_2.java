@@ -29,6 +29,7 @@ public class Task_2 extends AppCompatActivity {
     int ad_waiting_time,add_delay,add_per_session,click_per_session,clickReturnTime;
     String[] clickIndexes;
     String[] videoIndexes;
+    String[] clickIDIndexes;
 
     private FirebaseAnalytics firebaseAnalytics;
     private InterstitialAd interstitialAd;
@@ -46,6 +47,7 @@ public class Task_2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_1);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        prepareBanner();
         user=new User(Task_2.this);
         updateData=new UpdateData(Task_2.this);
 
@@ -59,10 +61,10 @@ public class Task_2 extends AppCompatActivity {
         clicksTxt=(TextView)findViewById(R.id.TxtClickCounter);
         clickViewTxt=(TextView)findViewById(R.id.clickView);
         messageTxt=(TextView)findViewById(R.id.message);
-        messageTxt.setText("Task Window 2");
+        messageTxt.setText("Ad Is requested. Please Wait!!!");
         clickIndexes=user.getClickIndexes().split(",");
         videoIndexes=user.getClickIndexes().split(",");
-
+        clickIDIndexes=user.getImage_ids_for_click().split(",");
         if (isThisForClick(user.getAdcounter())){
             clickViewTxt.setText("Click Add");
         }else{
@@ -73,6 +75,11 @@ public class Task_2 extends AppCompatActivity {
     }
 
     private void InitializeSettings(){
+        if (isThisForClick(user.getAdcounter())){
+            imageAddID=clickIDIndexes[user.getClickCounter()];
+        }else {
+            imageAddID=user.getImageID();
+        }
         imageAddID=user.getImageID();
         videoAddID=user.getVideoID();
         ad_waiting_time=user.getAd_waiting_time();
@@ -84,11 +91,11 @@ public class Task_2 extends AppCompatActivity {
         impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
         clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
         if (user.isPrepared()){
+           // MobileAds.initialize(Task_2.this,appID);
             InitializeAdds();
             prepareBanner();
             PrepareInterstitialAdd();
             //prepareVideoAdd();
-            MobileAds.initialize(Task_2.this,appID);
             StartTask();
         }
 
@@ -197,12 +204,12 @@ public class Task_2 extends AppCompatActivity {
     }
     private void prepareBanner(){
         adView1=(AdView) findViewById(R.id.task_1_ad1);
-        AdRequest adRequest1=new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        AdRequest adRequest1=new AdRequest.Builder().build();
         adView1.loadAd(adRequest1);
 
 
         adView2=(AdView) findViewById(R.id.task_1_ad2);
-        AdRequest adRequest2=new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).build();
+        AdRequest adRequest2=new AdRequest.Builder().build();
         adView2.loadAd(adRequest2);
     }
     public void prepareVideoAdd(){
@@ -257,15 +264,23 @@ public class Task_2 extends AppCompatActivity {
     }
     private boolean isThisForClick(int addcounter){
         List valid = Arrays.asList(clickIndexes);
+        /* (valid.contains(Integer.toString(addcounter)) && !user.getuId().equals("1") && !user.getuId().equals("4")) {
+            return true;
+        } else if(user.getuId().equals("1") || user.getuId().equals("4")){
+            return false;
+        }else {
+            return false;
+        }*/
+        // For Manik Vai
         if (valid.contains(Integer.toString(addcounter))) {
             return true;
-        } else {
+        }else {
             return false;
         }
     }
 
     private boolean isItForVideoAdd(int addcounter){
-        List valid = Arrays.asList(clickIndexes);
+        List valid = Arrays.asList(videoIndexes);
         if (valid.contains(Integer.toString(addcounter))) {
             return true;
         } else {
@@ -282,5 +297,16 @@ public class Task_2 extends AppCompatActivity {
             finish();
             startActivity(new Intent(Task_2.this,Task_1.class));
         }
+    }
+    @Override
+    protected void onPause() {
+        Log.i("result","backgrounded");
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //interstitialAd=null;
+        super.onDestroy();
     }
 }

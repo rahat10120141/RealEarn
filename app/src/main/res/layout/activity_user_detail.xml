@@ -128,7 +128,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             ads:adSize="LARGE_BANNER"
-            ads:adUnitId="ca-app-pub-3182923039985142/5662801781">
+            ads:adUnitId="ca-app-pub-4341605686477856/6074407893">
         </com.google.android.gms.ads.AdView>
     </LinearLayout>
     <LinearLayout
@@ -166,7 +166,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             ads:adSize="LARGE_BANNER"
-            ads:adUnitId="ca-app-pub-3182923039985142/6237516853">
+            ads:adUnitId="ca-app-pub-4341605686477856/5277165694">
         </com.google.android.gms.ads.AdView>
     </LinearLayout>
 </LinearLayout>

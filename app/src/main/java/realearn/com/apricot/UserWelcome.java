@@ -68,10 +68,6 @@ public class UserWelcome extends AppCompatActivity {
 
         user=new User(UserWelcome.this);
         uid=user.getuId();
-
-        Log.i("result",Integer.toString(user.getAdcounter()));
-
-
         appSettings=new AppSettings(UserWelcome.this);
 
         startTaskBtn=(Button) findViewById(R.id.btnStartTask);
@@ -107,8 +103,8 @@ public class UserWelcome extends AppCompatActivity {
                     }else {
                         user.setBreaktime(false);
                     }*/
-                    Log.i("result","Pref File: "+Boolean.toString(user.isBreaktime()));
-                    Log.i("result","Json File: "+jsonObject.getString("break_status"));
+                    //Log.i("result","Pref File: "+Boolean.toString(user.isBreaktime()));
+                    //Log.i("result","Json File: "+jsonObject.getString("break_status"));
                     if(verCode<Integer.parseInt(jsonObject.getString("version_code").toString())){
                         final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
                         try {
@@ -121,7 +117,7 @@ public class UserWelcome extends AppCompatActivity {
 
                     earningsTxt.setText(jsonObject.getString("balance").toString());
                     impressionTxt.setText(jsonObject.getString("impression").toString());
-                    fraudTxt.setText(jsonObject.getString("fraud").toString());
+                    fraudTxt.setText(jsonObject.getString("clicks").toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -210,6 +206,7 @@ public class UserWelcome extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         finish();
+        System.exit(0);
         super.onBackPressed();
     }
 }

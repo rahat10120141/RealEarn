@@ -28,6 +28,8 @@ public class User {
     public String imageID;
     public String videoID;
 
+    public String image_ids_for_click;
+
     public boolean prepared=false;
     int fraud=0;
     int totImoression;
@@ -48,8 +50,9 @@ public class User {
         sharedPreferences=context.getSharedPreferences(encrypt("realEarn"),context.MODE_PRIVATE);
     }
     public void removeUser(){
-        sharedPreferences.edit().clear().commit();
-        context.getSharedPreferences("realEarn",context.MODE_PRIVATE).edit().clear().commit();
+        //sharedPreferences.edit().clear().commit();
+        context.getSharedPreferences("realEarn", 0).edit().clear().commit();
+        //context.getSharedPreferences("realEarn",context.MODE_PRIVATE).edit().clear().commit();
     }
     public boolean isBreaktime() {
         String hiddenKey=sharedPreferences.getString(encrypt("breaktime"),encrypt("false"));
@@ -94,12 +97,6 @@ public class User {
     public void setClickCounter(int clickCounter) {
         sharedPreferences.edit().putString(encrypt("clickCounter"),encrypt(Integer.toString(clickCounter))).commit();
     }
-
-    public String getuId() {
-        uId=sharedPreferences.getString(encrypt("userId"),encrypt("1"));
-        return decrypt(uId);
-    }
-
     public int getAdcounter() {
         String adc="";
         adc=sharedPreferences.getString(encrypt("adcounter"),encrypt("0"));
@@ -110,7 +107,15 @@ public class User {
     public void setAdcounter(int adcounter) {
         sharedPreferences.edit().putString(encrypt("adcounter"),encrypt(Integer.toString(adcounter))).commit();
     }
-
+    public String getuId() {
+        //context.getSharedPreferences("realEarn", 0).edit().clear().commit();
+        uId=sharedPreferences.getString(encrypt("userId"),encrypt("0"));
+        if (decrypt(uId).equals("0")){
+            return null;
+        }else {
+            return decrypt(uId);
+        }
+    }
     public void setuId(String uId) {
         //this.uId = uId;
         sharedPreferences.edit().putString(encrypt("userId"),encrypt(uId)).commit();
@@ -151,6 +156,14 @@ public class User {
         sharedPreferences.edit().putString(encrypt("imageID"),encrypt(imageID)).commit();
     }
 
+    public String getImage_ids_for_click() {
+        image_ids_for_click=sharedPreferences.getString(encrypt("image_ids_for_click"),encrypt(""));
+        return decrypt(image_ids_for_click);
+    }
+
+    public void setImage_ids_for_click(String image_ids_for_click) {
+        sharedPreferences.edit().putString(encrypt("image_ids_for_click"),encrypt(image_ids_for_click)).commit();
+    }
     public String getVideoID() {
         videoID=sharedPreferences.getString(encrypt("videoID"),encrypt(""));
         return decrypt(videoID);

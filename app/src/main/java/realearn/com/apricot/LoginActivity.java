@@ -32,16 +32,22 @@ public class LoginActivity extends AppCompatActivity {
     String mobile,pass;
     AlertDialog.Builder builder;
     String url=Appurls.login_url;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        user=new User(LoginActivity.this);
+        if (user.getuId()!=null){
+            startActivity(new Intent(LoginActivity.this,UserWelcome.class));
+            finish();
+        }
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         etUserId=(EditText) findViewById(R.id.et_userId);
         etPass=(EditText) findViewById(R.id.et_pass);
         signIn=(Button) findViewById(R.id.btn_signIn);
         builder=new AlertDialog.Builder(LoginActivity.this);
-
+        //getApplicationContext().getSharedPreferences("realEarn", 0).edit().clear().commit();
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
