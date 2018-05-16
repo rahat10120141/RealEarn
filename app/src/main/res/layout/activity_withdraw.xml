@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="realearn.com.apricot.realearn.realearn.apricot.com.Withdraw"
+    tools:context="realearn.com.apricot.Withdraw"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             ads:adSize="LARGE_BANNER"
-            ads:adUnitId="ca-app-pub-4341605686477856/5277165694"></com.google.android.gms.ads.AdView>
+            ads:adUnitId="@string/banner_id"></com.google.android.gms.ads.AdView>
     </LinearLayout>
 
     <LinearLayout
@@ -90,7 +90,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             ads:adSize="LARGE_BANNER"
-            ads:adUnitId="ca-app-pub-4341605686477856/6074407893">
+            ads:adUnitId="@string/banner_id_2">
         </com.google.android.gms.ads.AdView>
     </LinearLayout>
 

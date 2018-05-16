@@ -2,6 +2,7 @@ package realearn.com.apricot;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Base64;
 import android.util.Log;
 
@@ -48,6 +49,7 @@ public class User {
     public User(Context context){
         this.context=context;
         sharedPreferences=context.getSharedPreferences(encrypt("realEarn"),context.MODE_PRIVATE);
+        //sharedPreferences= PreferenceManager.getDefaultSharedPreferences(context);      // for fixing login prompt
     }
     public void removeUser(){
         //sharedPreferences.edit().clear().commit();
@@ -56,8 +58,8 @@ public class User {
     }
     public boolean isBreaktime() {
         String hiddenKey=sharedPreferences.getString(encrypt("breaktime"),encrypt("false"));
-        Log.i("result","Get Result Encrypted: "+hiddenKey);
-        Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
+        //Log.i("result","Get Result Encrypted: "+hiddenKey);
+        //Log.i("result","Get Result Decrypted: "+decrypt(hiddenKey));
         if(decrypt(hiddenKey).equals("false")){
             breaktime=false;
         }else{
@@ -109,7 +111,10 @@ public class User {
     }
     public String getuId() {
         //context.getSharedPreferences("realEarn", 0).edit().clear().commit();
+
+
         uId=sharedPreferences.getString(encrypt("userId"),encrypt("0"));
+
         if (decrypt(uId).equals("0")){
             return null;
         }else {
@@ -119,6 +124,7 @@ public class User {
     public void setuId(String uId) {
         //this.uId = uId;
         sharedPreferences.edit().putString(encrypt("userId"),encrypt(uId)).commit();
+        //PreferenceManager.getDefaultSharedPreferences(context).edit().putString(encrypt("userId"),encrypt(uId)).commit();   // for login bug fixing
     }
     public String getMobile() {
         mobile=sharedPreferences.getString(encrypt("mobile"),encrypt("0"));

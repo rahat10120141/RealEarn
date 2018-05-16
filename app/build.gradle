@@ -7,8 +7,8 @@ android {
         applicationId "realearn.com.apricot"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 6
-        versionName "2.0"
+        versionCode 7
+        versionName "2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -21,6 +21,7 @@ android {
             jniDebuggable true
         }
     }
+    buildToolsVersion '26.0.0'
 }
 
 dependencies {

@@ -38,7 +38,7 @@ public class UserWelcome extends AppCompatActivity {
 
     Button reportBtn,withdrawBtn,startTaskBtn,facebokBtn,rulesBtn;
 
-    AdView adView1,adView2,adView3;
+    AdView adView1,adView2,adView3,adView4;
 
     User user;
     String uid;
@@ -81,6 +81,14 @@ public class UserWelcome extends AppCompatActivity {
         earningsTxt=(TextView)findViewById(R.id.balance);
 
         // Initializing Banner Ads
+
+        adView1 = findViewById(R.id.adView1);
+        AdRequest adRequest1 = new AdRequest.Builder().build();
+        adView1.loadAd(adRequest1);
+
+        adView2 = findViewById(R.id.adView2);
+        AdRequest adRequest2 = new AdRequest.Builder().build();
+        adView2.loadAd(adRequest2);
 
         adView3 = findViewById(R.id.adView3);
         AdRequest adRequest3 = new AdRequest.Builder().build();
@@ -166,7 +174,7 @@ public class UserWelcome extends AppCompatActivity {
         facebokBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.facebook.com/"); // missing 'http://' will cause crashed
+                Uri uri = Uri.parse("https://www.facebook.com/groups/137668183614933/"); // missing 'http://' will cause crashed
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
