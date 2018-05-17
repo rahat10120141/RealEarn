@@ -6,9 +6,9 @@ package realearn.com.apricot;
 
 public class Appurls {
 
-   public static String baseUrl="http://ragory.com/index.php/";
+   //public static String baseUrl="http://ragory.com/index.php/";
    //public static String baseUrl="http://manik.ragory.com/index.php/";
-   //public static String baseUrl="http://192.168.1.113/re/index.php/";
+   public static String baseUrl="http://192.168.1.101/re/index.php/";
    public static String login_url= baseUrl+ "login/userLogin";
    public static String reg_ur=baseUrl+"login/register";
    public static String add_urls=baseUrl+"addmanager/adData";

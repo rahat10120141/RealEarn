@@ -341,8 +341,6 @@ public class Task_2 extends AppCompatActivity {
         if (user.getAdcounter()>=user.getAdd_per_session()){
             updateData.UpdateBreak();
             user.setBreaktime(true);
-            user.setAdcounter(0);
-            user.setClickCounter(0);
             finish();
             startActivity(new Intent(Task_2.this,UserWelcome.class));
         }else{

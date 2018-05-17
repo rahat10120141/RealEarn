@@ -103,7 +103,7 @@ public class Task_1 extends AppCompatActivity {
             InitializeAdds();
             prepareBanner();
             PrepareInterstitialAdd();
-            //prepareVideoAdd();
+            prepareVideoAdd();
             StartTask();
         }
 
@@ -361,8 +361,6 @@ public class Task_1 extends AppCompatActivity {
         if (user.getAdcounter()>=user.getAdd_per_session()){
             updateData.UpdateBreak();
             user.setBreaktime(true);
-            user.setAdcounter(0);
-            user.setClickCounter(0);
             finish();
             startActivity(new Intent(Task_1.this,UserWelcome.class));
         }else{

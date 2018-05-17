@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="realearn.com.apricot.realearn.realearn.apricot.com.LoginActivity">
+    tools:context="realearn.com.apricot.LoginActivity">
 
     <EditText
         android:id="@+id/et_userId"
