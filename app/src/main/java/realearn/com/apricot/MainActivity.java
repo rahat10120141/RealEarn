@@ -31,8 +31,8 @@ public class MainActivity extends AppCompatActivity {
         //user.removeSettings();
         //user.removeUser();
         if (user.getuId()!=null){
-            finish();
             startActivity(new Intent(MainActivity.this,UserWelcome.class));
+            finish();
         }else {
             login_btn.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -285,11 +285,16 @@ public class User {
     // Enf Of App Setting
     public String encrypt(String input) {
         // This is base64 encoding, which is not an encryption
-        return Base64.encodeToString(input.getBytes(), Base64.DEFAULT);
+        // For Login Problem Encrytion is turned off
+        //return Base64.encodeToString(input.getBytes(), Base64.DEFAULT);
+
+        return input;
     }
 
     public String decrypt(String input) {
-        return new String(Base64.decode(input, Base64.DEFAULT));
+
+        return input;
+        //return new String(Base64.decode(input, Base64.DEFAULT));
     }
 
 }

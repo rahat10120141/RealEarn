@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Real Earn</string>
-    <string name="banner_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id_2">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id_3">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id_4">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id">ca-app-pub-5379602732237230/1968856949<!--ca-app-pub-3940256099942544/6300978111--></string>
+    <string name="banner_id_2">ca-app-pub-5379602732237230/3772182765<!--ca-app-pub-3940256099942544/6300978111--></string>
+    <string name="banner_id_3">ca-app-pub-5379602732237230/6558128205<!--ca-app-pub-3940256099942544/6300978111--></string>
+    <string name="banner_id_4">ca-app-pub-5379602732237230/7104923119<!--ca-app-pub-3940256099942544/6300978111--></string>
 </resources>

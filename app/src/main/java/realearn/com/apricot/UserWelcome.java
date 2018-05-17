@@ -106,6 +106,10 @@ public class UserWelcome extends AppCompatActivity {
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
                     user.setBreaktime(jsonObject.getString("break_status").toString().equals("1")?true:false);
+                    if (user.isBreaktime()){
+                        user.setAdcounter(0);
+                        user.setClickCounter(0);
+                    }
                     /*if (jsonObject.getString("break_status").equals("1")){
                         user.setBreaktime(true);
                     }else {
@@ -174,7 +178,7 @@ public class UserWelcome extends AppCompatActivity {
         facebokBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.facebook.com/groups/137668183614933/"); // missing 'http://' will cause crashed
+                Uri uri = Uri.parse("https://www.facebook.com/groups/137668183614933/"); // groups/137668183614933/
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
