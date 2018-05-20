@@ -121,7 +121,7 @@ public class Task_1 extends AppCompatActivity {
         adDelay=new CountDownTimer(add_delay,1000) {
             @Override
             public void onTick(long l) {
-                final_messageTxt.setText("All the ads are loaded, Please wait till it shows on the screen!");
+                final_messageTxt.setText("All the ads are loaded, Please wait till it shows!");
             }
             @Override
             public void onFinish() {
@@ -220,7 +220,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onAdFailedToLoad(int i) {
-                messageTxt.setText("Please Wait While requestng Main Add");
+                messageTxt.setText("Please Wait While requestng Main Add, Code: "+Integer.toString(i));
                 interstitialAd.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
@@ -282,7 +282,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onAdFailedToLoad(int i) {
-                messageTxt1.setText("Please Wait While requestng Add-1");
+                messageTxt1.setText("Please Wait While requestng Add-1, Code: "+Integer.toString(i));
                 interstitialAd1.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
@@ -321,7 +321,7 @@ public class Task_1 extends AppCompatActivity {
             @Override
             public void onAdFailedToLoad(int i) {
                 Log.i("Click",Integer.toString(i));
-                messageTxt2.setText("Please Wait While requestng Add-2");
+                messageTxt2.setText("Please Wait While requestng Add-2, Code: "+Integer.toString(i));
                 interstitialAd2.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
@@ -440,7 +440,7 @@ public class Task_1 extends AppCompatActivity {
         if (user.getAdcounter()>=user.getAdd_per_session()){
             updateData.UpdateBreak();
             user.setBreaktime(true);
-            startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+            startActivity(new Intent(getApplicationContext(),Task_complete.class));
             finish();
         }else{
             finish();

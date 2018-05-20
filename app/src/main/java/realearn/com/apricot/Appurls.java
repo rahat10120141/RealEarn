@@ -14,6 +14,7 @@ public class Appurls {
    public static String add_urls=baseUrl+"addmanager/adData";
    public static String image_add_view_success=baseUrl+"addmanager/processIrrestitial";
    public static String video_add_view_success=baseUrl+"addmanager/processVideo";
+   public static String complete_task=baseUrl+"addmanager/completeTask";
    public static String fetch_user_date=baseUrl+"users/getUserData";
    public static String submit_break_time=baseUrl+"users/submitBreakTime";
    public static String user_work_data=baseUrl+"users/getWorkData";
