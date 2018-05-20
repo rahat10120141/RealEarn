@@ -152,6 +152,7 @@ public class Task_1 extends AppCompatActivity {
 
         interstitialAd2=new InterstitialAd(getApplicationContext());
         interstitialAd2.setAdUnitId(clickIDIndexes[2]);
+        MobileAds.initialize(getApplicationContext(),appID);
         Log.i("Click",clickIDIndexes[2]);
 
 
@@ -305,7 +306,6 @@ public class Task_1 extends AppCompatActivity {
                     public void onFinish() {
                         interstitialAd1.show();
                         adTimer.cancel();
-                        Log.i("Click","Showing Add-1");
                     }
                 }.start();
                 super.onAdOpened();

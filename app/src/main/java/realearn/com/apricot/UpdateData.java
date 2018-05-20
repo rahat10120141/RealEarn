@@ -34,6 +34,33 @@ public class UpdateData {
         //builder=new AlertDialog.Builder(context);
     }
 
+    public void ProcessCompleteTask(){
+        stringRequest=new StringRequest(Request.Method.POST, Appurls.complete_task, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray=new JSONArray(response);
+                    JSONObject jsonObject=jsonArray.getJSONObject(0);
+                    String code=jsonObject.getString("code");
+                }catch (JSONException e){
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params=new HashMap<String, String>();
+                params.put("uid",uid);
+                return params;
+            }
+        };
+        Mysingleton.getmInstance(context).AddToRequestQue(stringRequest);
+    }
     public void ProcessInterstitialAdd(final int adCount,final String activityType){
             stringRequest=new StringRequest(Request.Method.POST, Appurls.image_add_view_success, new Response.Listener<String>() {
                 @Override
