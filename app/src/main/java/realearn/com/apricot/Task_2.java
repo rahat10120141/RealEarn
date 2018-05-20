@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Task_2 extends AppCompatActivity {
-
     // Settings Data
     String imageAddID,videoAddID,appID;
     AdView adView1,adView2,adView3,adView4;
@@ -37,9 +36,9 @@ public class Task_2 extends AppCompatActivity {
     private InterstitialAd interstitialAd,interstitialAd1,interstitialAd2,interstitialAd3,interstitialAd4,interstitialAd5,interstitialAd6;
     private RewardedVideoAd rewardedVideoAd;
 
-    TextView impressionTxt,clicksTxt,messageTxt,clickViewTxt;
+    TextView impressionTxt,clicksTxt,messageTxt,messageTxt1,messageTxt2,final_messageTxt,clickViewTxt;
     private boolean willClick=false;
-    private CountDownTimer adDelay,adWaitingTime,clickTimer;
+    private CountDownTimer adDelay,adWaitingTime,clickTimer,adTimer;
 
     User user;
     AppSettings appSettings;
@@ -53,31 +52,40 @@ public class Task_2 extends AppCompatActivity {
 
         //Log.i("click","I am alive");
         prepareBanner();
-        user=new User(Task_2.this);
-        updateData=new UpdateData(Task_2.this);
+        user=new User(getApplicationContext());
+        updateData=new UpdateData(getApplicationContext());
         impressionTxt=(TextView)findViewById(R.id.TxtImpression);
         clicksTxt=(TextView)findViewById(R.id.TxtClickCounter);
         clickViewTxt=(TextView)findViewById(R.id.clickView);
         messageTxt=(TextView)findViewById(R.id.message);
+        messageTxt1=(TextView)findViewById(R.id.message1);
+        messageTxt2=(TextView)findViewById(R.id.message2);
+        final_messageTxt=(TextView)findViewById(R.id.final_message);
+
         messageTxt.setText("Ad Is requested. Please Wait!!!");
         clickIndexes=user.getClickIndexes().split(",");
         videoIndexes=user.getClickIndexes().split(",");
         clickIDIndexes=user.getImage_ids_for_click().split(",");
+
+        if (user.isBreaktime() || user.getAdcounter()>=user.getAdd_per_session()){
+            updateData.UpdateBreak();
+            user.setBreaktime(true);
+            startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+            finish();
+        }
+
         if (isThisForClick(user.getAdcounter())){
             clickViewTxt.setText("Click Add");
         }else{
             clickViewTxt.setText("View Add");
         }
         InitializeSettings();
-        firebaseAnalytics=FirebaseAnalytics.getInstance(Task_2.this);
+        firebaseAnalytics=FirebaseAnalytics.getInstance(getApplicationContext());
     }
 
     private void InitializeSettings(){
         if (isThisForClick(user.getAdcounter())){
             imageAddID=clickIDIndexes[user.getClickCounter()];
-            //Log.i("click","Click Index: "+Integer.toString(user.getClickCounter()));
-            //Log.i("click","Ad Index: "+Integer.toHexString(user.getAdcounter()));
-            //Log.i("click",imageAddID);
         }else {
             imageAddID=user.getImageID();
         }
@@ -91,87 +99,47 @@ public class Task_2 extends AppCompatActivity {
         impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
         clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
         if (user.isPrepared()){
-            //MobileAds.initialize(Task_1.this,appID);
-            //prepareBanner();
             InitializeAdds();
-            //PrepareInterstitialAdd();
             prepareVideoAdd();
-            //StartTask();
         }
 
-    }
-
-    private void StartTask(){
-        //Log.i("click","Task Started");
+        // Timers
         adDelay=new CountDownTimer(add_delay,1000) {
             @Override
             public void onTick(long l) {
-                if (interstitialAd.isLoaded()){
-                    messageTxt.setText("Add is Loaded Please Wait till it shows on the Screen");
-                }
+                final_messageTxt.setText("All the ads are loaded, Please wait till it shows on the screen!");
             }
             @Override
             public void onFinish() {
                 if (interstitialAd.isLoaded()){
                     if (!isThisForClick(user.getAdcounter())){
-                        if (interstitialAd1.isLoaded()){
-                            //Log.i("result2","In 1 Loaded");
-                            interstitialAd1.show();
-                        }
-                        if (interstitialAd2.isLoaded()){
-                            //Log.i("result2","In 2 Loaded");
-                            interstitialAd2.show();
-                        }
-                        /*if (interstitialAd3.isLoaded()){
-                            //Log.i("result2","In 3 Loaded");
-                            interstitialAd3.show();
-                        }
-                        /*if (interstitialAd4.isLoaded()){
-                            //Log.i("result2","In 4 Loaded");
-                            interstitialAd4.show();
-                        }
-                        if (interstitialAd5.isLoaded()){
-                            //Log.i("result2","In 5 Loaded");
-                            interstitialAd5.show();
-                        }
-                        /*if (interstitialAd6.isLoaded()){
-                            //Log.i("result2","In 6 Loaded");
-                            interstitialAd6.show();
-                        }*/
-                        interstitialAd.show();
-                        adWaitingTime=new CountDownTimer(ad_waiting_time,1000) {
-                            @Override
-                            public void onTick(long l) {
-
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                user.setAdcounter(user.getAdcounter()+1);
-                                updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
-                                adDelay.cancel();
-                                adWaitingTime.cancel();
-                                CheckUserBreak();
-                            }
-                        }.start();
+                        interstitialAd2.show();
                     }else{
                         interstitialAd.show();
                     }
                 }
             }
-        }.start();
+        };
+
+    }
+
+    private void StartTask(){
+        //Log.i("click","Task Started");
+        adDelay.start();
     }
 
     private void InitializeAdds(){
         //------------------------------- Intertetial Add ------------------------------------------------
-        interstitialAd=new InterstitialAd(Task_2.this); // main Add
+        interstitialAd=new InterstitialAd(getApplicationContext()); // main Add
         interstitialAd.setAdUnitId(clickIDIndexes[0]);
 
-        interstitialAd1=new InterstitialAd(Task_2.this);
+        interstitialAd1=new InterstitialAd(getApplicationContext());
         interstitialAd1.setAdUnitId(clickIDIndexes[1]);
 
-        interstitialAd2=new InterstitialAd(Task_2.this);
+        interstitialAd2=new InterstitialAd(getApplicationContext());
         interstitialAd2.setAdUnitId(clickIDIndexes[2]);
+        Log.i("Click",clickIDIndexes[2]);
+
 
         /*interstitialAd3=new InterstitialAd(Task_1.this);
         interstitialAd3.setAdUnitId(imageAddID);
@@ -195,7 +163,8 @@ public class Task_2 extends AppCompatActivity {
         interstitialAd.setAdListener(new AdListener(){
             @Override
             public void onAdLoaded() {
-                //Log.i("result","Add Loaded");
+                messageTxt.setText("Main Add Successfully Loaded");
+                checkAddCondition();
                 super.onAdLoaded();
             }
 
@@ -212,14 +181,33 @@ public class Task_2 extends AppCompatActivity {
 
             @Override
             public void onAdOpened() {
+                Log.i("Click","Showing Main Add");
+                if (!isThisForClick(user.getAdcounter())){
+                    adTimer=new CountDownTimer(6000,1000) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
 
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            user.setAdcounter(user.getAdcounter()+1);
+                            updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                            adDelay.cancel();
+                            //adWaitingTime.cancel();
+                            CheckUserBreak();
+                            adTimer.cancel();
+                            Log.i("Click","Main Add Opened And Close");
+                        }
+                    }.start();
+                }
                 super.onAdOpened();
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
-                messageTxt.setText("Add ID Failed To load, Please Go Back to Main Window and then Come Back");
-                InitializeAdds();
+                messageTxt.setText("Please Wait While requestng Main Add");
+                interstitialAd.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
 
@@ -251,13 +239,91 @@ public class Task_2 extends AppCompatActivity {
         });
 
         interstitialAd1.loadAd(new AdRequest.Builder().build());
-        interstitialAd2.loadAd(new AdRequest.Builder().build());
-//        interstitialAd3.loadAd(new AdRequest.Builder().build());
-        StartTask();
-        /*interstitialAd4.loadAd(new AdRequest.Builder().build());
-        interstitialAd5.loadAd(new AdRequest.Builder().build());
-       /* interstitialAd6.loadAd(new AdRequest.Builder().build());*/
+        interstitialAd1.setAdListener(new AdListener(){
+            @Override
+            public void onAdOpened() {
+                Log.i("Click","Showing Add-1");
+                adTimer=new CountDownTimer(5000,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
 
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        interstitialAd.show();
+                        adTimer.cancel();
+                    }
+                }.start();
+
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                messageTxt1.setText("Add-1 Successfully Loaded");
+                checkAddCondition();
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                messageTxt1.setText("Please Wait While requestng Add-1");
+                interstitialAd1.loadAd(new AdRequest.Builder().build());
+                super.onAdFailedToLoad(i);
+            }
+        });
+
+
+
+        interstitialAd2.loadAd(new AdRequest.Builder().build());
+        interstitialAd2.setAdListener(new AdListener(){
+            @Override
+            public void onAdOpened() {
+                Log.i("Click","Showing Add-2");
+                adTimer=new CountDownTimer(5000,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        interstitialAd1.show();
+                        adTimer.cancel();
+                        Log.i("Click","Showing Add-1");
+                    }
+                }.start();
+                super.onAdOpened();
+            }
+
+            @Override
+            public void onAdLoaded() {
+                messageTxt2.setText("Add-2 Successfully Loaded");
+                checkAddCondition();
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int i) {
+                Log.i("Click",Integer.toString(i));
+                messageTxt2.setText("Please Wait While requestng Add-2");
+                interstitialAd2.loadAd(new AdRequest.Builder().build());
+                super.onAdFailedToLoad(i);
+            }
+
+        });
+    }
+    private void checkAddCondition(){
+        if (!isThisForClick(user.getAdcounter())){
+            if (interstitialAd.isLoaded() && interstitialAd1.isLoaded() && interstitialAd2.isLoaded()){
+                StartTask();
+            }else{
+                final_messageTxt.setText("Please Wait till all the adds are loaded successfully");
+            }
+        }else {
+            StartTask();
+        }
     }
     private void prepareBanner(){
         adView1=(AdView) findViewById(R.id.task_1_ad1);
@@ -278,7 +344,7 @@ public class Task_2 extends AppCompatActivity {
         adView4.loadAd(adRequest4);
     }
     public void prepareVideoAdd(){
-        rewardedVideoAd=MobileAds.getRewardedVideoAdInstance(Task_2.this);
+        rewardedVideoAd=MobileAds.getRewardedVideoAdInstance(getApplicationContext());
         loadRewardedVideoAd();
         rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
@@ -330,7 +396,7 @@ public class Task_2 extends AppCompatActivity {
     private boolean isThisForClick(int addcounter){
         List valid = Arrays.asList(clickIndexes);
         //Log.i("click","Click Check is called for: "+Integer.toString(addcounter));
-        if (valid.contains(Integer.toString(addcounter)) && !user.getuId().equals("1") && !user.getuId().equals("4")) {
+        /*if (valid.contains(Integer.toString(addcounter)) && !user.getuId().equals("1") && !user.getuId().equals("4")) {
             //Log.i("click","Click Check Returning True for: "+Integer.toString(addcounter));
             return true;
         } else if(user.getuId().equals("1") || user.getuId().equals("4")){
@@ -339,13 +405,13 @@ public class Task_2 extends AppCompatActivity {
         }else {
             //Log.i("click","Click Check Returning False for: "+Integer.toString(addcounter));
             return false;
-        }
+        }*/
         // For Manik Vai
-        /*if (valid.contains(Integer.toString(addcounter))) {
+        if (valid.contains(Integer.toString(addcounter))) {
             return true;
         }else {
             return false;
-        }*/
+        }
     }
 
     private boolean isItForVideoAdd(int addcounter){
@@ -360,11 +426,11 @@ public class Task_2 extends AppCompatActivity {
         if (user.getAdcounter()>=user.getAdd_per_session()){
             updateData.UpdateBreak();
             user.setBreaktime(true);
+            startActivity(new Intent(getApplicationContext(),UserWelcome.class));
             finish();
-            startActivity(new Intent(Task_2.this,UserWelcome.class));
         }else{
             finish();
-            startActivity(new Intent(Task_2.this,Task_1.class));
+            startActivity(new Intent(getApplicationContext(),Task_1.class));
         }
     }
 
@@ -378,5 +444,4 @@ public class Task_2 extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
     }
-
 }
