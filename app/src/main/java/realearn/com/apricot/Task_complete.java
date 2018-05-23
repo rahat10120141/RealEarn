@@ -85,7 +85,10 @@ public class Task_complete extends AppCompatActivity {
                 if (rewardedVideoAd.isLoaded()){
                     rewardedVideoAd.show();
                 }else{
-                    loadRewardedVideo();
+                    updateData.ProcessCompleteTask();
+                    startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                    finish();
+                    //loadRewardedVideo();
                 }
             }
         });

@@ -145,15 +145,18 @@ public class Task_1 extends AppCompatActivity {
     private void InitializeAdds(){
         //------------------------------- Intertetial Add ------------------------------------------------
         interstitialAd=new InterstitialAd(getApplicationContext()); // main Add
-        interstitialAd.setAdUnitId(clickIDIndexes[0]);
+        interstitialAd.setAdUnitId(imageAddID);
 
+        Log.i("click",clickIDIndexes[0]);
         interstitialAd1=new InterstitialAd(getApplicationContext());
-        interstitialAd1.setAdUnitId(clickIDIndexes[1]);
+        interstitialAd1.setAdUnitId(clickIDIndexes[0]);
 
         interstitialAd2=new InterstitialAd(getApplicationContext());
-        interstitialAd2.setAdUnitId(clickIDIndexes[2]);
+        interstitialAd2.setAdUnitId(clickIDIndexes[1]);
         MobileAds.initialize(getApplicationContext(),appID);
-        Log.i("Click",clickIDIndexes[2]);
+        Log.i("Click","Index 2: "+clickIDIndexes[2]);
+
+        Log.i("click","Image: "+imageAddID);
 
 
         /*interstitialAd3=new InterstitialAd(Task_1.this);
@@ -320,7 +323,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onAdFailedToLoad(int i) {
-                Log.i("Click",Integer.toString(i));
+                //Log.i("Click",Integer.toString(i));
                 messageTxt2.setText("Please Wait While requestng Add-2, Code: "+Integer.toString(i));
                 interstitialAd2.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
@@ -410,7 +413,7 @@ public class Task_1 extends AppCompatActivity {
     private boolean isThisForClick(int addcounter){
         List valid = Arrays.asList(clickIndexes);
         //Log.i("click","Click Check is called for: "+Integer.toString(addcounter));
-        /*if (valid.contains(Integer.toString(addcounter)) && !user.getuId().equals("1") && !user.getuId().equals("4")) {
+        if (valid.contains(Integer.toString(addcounter)) && !user.getuId().equals("1") && !user.getuId().equals("4")) {
             //Log.i("click","Click Check Returning True for: "+Integer.toString(addcounter));
             return true;
         } else if(user.getuId().equals("1") || user.getuId().equals("4")){
@@ -419,13 +422,14 @@ public class Task_1 extends AppCompatActivity {
         }else {
             //Log.i("click","Click Check Returning False for: "+Integer.toString(addcounter));
             return false;
-        }*/
+        }
         // For Manik Vai
+       /*
         if (valid.contains(Integer.toString(addcounter))) {
             return true;
         }else {
             return false;
-        }
+        }*/
     }
 
     private boolean isItForVideoAdd(int addcounter){

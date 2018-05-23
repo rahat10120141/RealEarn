@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,8 +36,9 @@ import realearn.com.apricot.R;
 
 public class UserWelcome extends AppCompatActivity {
 
-    TextView impressionTxt,fraudTxt,earningsTxt;
+    //TextView impressionTxt,fraudTxt,earningsTxt;
 
+    TextView txtTaskIncome,txtRefIncome,txtOtherIncome,txtWithdraw,txtRemain;
     Button reportBtn,withdrawBtn,startTaskBtn,facebokBtn,rulesBtn;
 
     AdView adView1,adView2,adView3,adView4;
@@ -53,7 +56,8 @@ public class UserWelcome extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_welcome);
+        //setContentView(R.layout.activity_user_welcome);
+        setContentView(R.layout.user_welcome);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toast.makeText(getApplicationContext(), "Please Join Our Facebook Group if you have not joined yet",
                 Toast.LENGTH_LONG).show();
@@ -70,17 +74,32 @@ public class UserWelcome extends AppCompatActivity {
         uid=user.getuId();
         appSettings=new AppSettings(UserWelcome.this);
 
-        startTaskBtn=(Button) findViewById(R.id.btnStartTask);
-        reportBtn=(Button)findViewById(R.id.btnReport);
-        withdrawBtn=(Button) findViewById(R.id.btnWithdraw);
-        facebokBtn=(Button) findViewById(R.id.btn_facebook);
-        rulesBtn=(Button)findViewById(R.id.btn_rules);
+        startTaskBtn=(Button) findViewById(R.id.btnNewStartTask);
+        reportBtn=(Button)findViewById(R.id.btnNewUserInfo);
+        withdrawBtn=(Button) findViewById(R.id.btnWithdrawNew);
+        facebokBtn=(Button) findViewById(R.id.btnFacebookNew);
+        rulesBtn=(Button)findViewById(R.id.btnRulesNew);
 
-        impressionTxt=(TextView)findViewById(R.id.impression);
-        fraudTxt=(TextView)findViewById(R.id.fraud);
-        earningsTxt=(TextView)findViewById(R.id.balance);
+
+        txtTaskIncome=(TextView) findViewById(R.id.txtTaskIncome);
+        txtRefIncome=(TextView) findViewById(R.id.txtRefIncome);
+        txtOtherIncome=(TextView)findViewById(R.id.txtOtherIncome);
+        txtWithdraw=(TextView)findViewById(R.id.txtWithdraw);
+        txtRemain=(TextView)findViewById(R.id.txtRemainings);
+
+
+
+        // These textviews are depricated
+
+        //impressionTxt=(TextView)findViewById(R.id.impression);
+        //fraudTxt=(TextView)findViewById(R.id.fraud);
+        //earningsTxt=(TextView)findViewById(R.id.balance);
 
         // Initializing Banner Ads
+
+
+        // No Ad will be shown on new user welcome screen
+        /*
 
         adView1 = findViewById(R.id.adView1);
         AdRequest adRequest1 = new AdRequest.Builder().build();
@@ -93,6 +112,7 @@ public class UserWelcome extends AppCompatActivity {
         adView3 = findViewById(R.id.adView3);
         AdRequest adRequest3 = new AdRequest.Builder().build();
         adView3.loadAd(adRequest3);
+        */
 
         builder=new AlertDialog.Builder(UserWelcome.this);
 
@@ -103,6 +123,7 @@ public class UserWelcome extends AppCompatActivity {
             @Override
             public void onSuccess(String result) {
                 try {
+                    Log.i("result",result);
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
                     user.setBreaktime(jsonObject.getString("break_status").toString().equals("1")?true:false);
@@ -110,13 +131,6 @@ public class UserWelcome extends AppCompatActivity {
                         user.setAdcounter(0);
                         user.setClickCounter(0);
                     }
-                    /*if (jsonObject.getString("break_status").equals("1")){
-                        user.setBreaktime(true);
-                    }else {
-                        user.setBreaktime(false);
-                    }*/
-                    //Log.i("result","Pref File: "+Boolean.toString(user.isBreaktime()));
-                    //Log.i("result","Json File: "+jsonObject.getString("break_status"));
                     if(verCode<Integer.parseInt(jsonObject.getString("version_code").toString())){
                         final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
                         try {
@@ -126,10 +140,15 @@ public class UserWelcome extends AppCompatActivity {
                         }
                         System.exit(0);
                     }
+                    txtOtherIncome.setText(jsonObject.getString("other_income").toString());
+                    txtTaskIncome.setText(jsonObject.getString("task_income").toString());
+                    txtRefIncome.setText(jsonObject.getString("referral_income").toString());
+                    txtWithdraw.setText(jsonObject.getString("total_withdraw").toString());
+                    txtRemain.setText(jsonObject.getString("balance").toString());
 
-                    earningsTxt.setText(jsonObject.getString("balance").toString());
-                    impressionTxt.setText(jsonObject.getString("impression").toString());
-                    fraudTxt.setText(jsonObject.getString("clicks").toString());
+                    //earningsTxt.setText(jsonObject.getString("balance").toString());
+                    //impressionTxt.setText(jsonObject.getString("impression").toString());
+                    //fraudTxt.setText(jsonObject.getString("clicks").toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -141,7 +160,7 @@ public class UserWelcome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent=new Intent(UserWelcome.this,Task_1.class);
-                intent.putExtra("total_impression",Integer.parseInt(impressionTxt.getText().toString()));
+                //intent.putExtra("total_impression",Integer.parseInt(impressionTxt.getText().toString()));
                 if (user.isBreaktime()){
                     builder.setTitle("Break Time");
                     builder.setMessage("You are on break time. Please come after few time");
@@ -166,6 +185,7 @@ public class UserWelcome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(UserWelcome.this,UserDetail.class));
+                //startActivity(new Intent(UserWelcome.this,Task_complete.class));
             }
         });
 
