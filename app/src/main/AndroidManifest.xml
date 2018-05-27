@@ -52,7 +52,11 @@
         <activity
             android:name=".Task_2"
             android:noHistory="true" />
-        <activity android:name=".Task_complete"></activity>
+        <activity android:name=".Task_complete" />
+        <activity
+            android:name=".AllWithdraw"
+            android:label="@string/title_activity_all_withdraw"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
