@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -21,7 +22,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.InterstitialAd;
+//import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
@@ -37,6 +38,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.facebook.ads.*;
+
+
 public class Task_1 extends AppCompatActivity {
     // Settings Data
     String imageAddID,videoAddID,appID;
@@ -47,8 +51,10 @@ public class Task_1 extends AppCompatActivity {
     String[] clickIDIndexes;
 
     private FirebaseAnalytics firebaseAnalytics;
-    private InterstitialAd interstitialAd,interstitialAd1,interstitialAd2,interstitialAd3,interstitialAd4,interstitialAd5,interstitialAd6;
+    //private InterstitialAd interstitialAd,interstitialAd1,interstitialAd2,interstitialAd3,interstitialAd4,interstitialAd5,interstitialAd6;
     private RewardedVideoAd rewardedVideoAd;
+
+    private InterstitialAd interstitialAdfb,interstitialAdfb1,interstitialAdfb2;
 
     TextView impressionTxt,clicksTxt,messageTxt,messageTxt1,messageTxt2,final_messageTxt,clickViewTxt;
     private boolean willClick=false;
@@ -94,6 +100,7 @@ public class Task_1 extends AppCompatActivity {
             clickViewTxt.setText("View Add");
         }
         InitializeSettings();
+        InitializeFBAds();
         firebaseAnalytics=FirebaseAnalytics.getInstance(getApplicationContext());
     }
 
@@ -125,13 +132,13 @@ public class Task_1 extends AppCompatActivity {
             }
             @Override
             public void onFinish() {
-                if (interstitialAd.isLoaded()){
+                /*if (interstitialAd.isLoaded()){
                     if (!isThisForClick(user.getAdcounter())){
                         interstitialAd2.show();
                     }else{
                         interstitialAd.show();
                     }
-                }
+                }*/
             }
         };
 
@@ -142,8 +149,118 @@ public class Task_1 extends AppCompatActivity {
         adDelay.start();
     }
 
+    private void InitializeFBAds(){
+        AdSettings.addTestDevice("ab5deb67-3132-4fe2-8b82-43801f691319");
+        interstitialAdfb=new InterstitialAd(getApplicationContext(),"170438096963445_170471066960148");
+        interstitialAdfb.setAdListener(new InterstitialAdListener() {
+            @Override
+            public void onInterstitialDisplayed(Ad ad) {
+
+            }
+
+            @Override
+            public void onInterstitialDismissed(Ad ad) {
+
+            }
+
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                messageTxt.setText(adError.getErrorMessage());
+                Toast.makeText(getApplicationContext(), "Error: " + adError.getErrorMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                interstitialAdfb.show();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+        interstitialAdfb.loadAd();
+
+        interstitialAdfb1=new InterstitialAd(getApplicationContext(),"170438096963445_170471140293474");
+        interstitialAdfb1.setAdListener(new InterstitialAdListener() {
+            @Override
+            public void onInterstitialDisplayed(Ad ad) {
+
+            }
+
+            @Override
+            public void onInterstitialDismissed(Ad ad) {
+
+            }
+
+            @Override
+            public void onError(Ad ad, AdError adError) {
+                messageTxt.setText(adError.getErrorMessage());
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                interstitialAdfb1.show();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+        interstitialAdfb1.loadAd();
+
+
+        interstitialAdfb2=new InterstitialAd(getApplicationContext(),"170438096963445_170471170293471");
+        interstitialAdfb2.setAdListener(new InterstitialAdListener() {
+            @Override
+            public void onInterstitialDisplayed(Ad ad) {
+
+            }
+
+            @Override
+            public void onInterstitialDismissed(Ad ad) {
+
+            }
+
+            @Override
+            public void onError(Ad ad, AdError adError) {
+
+            }
+
+            @Override
+            public void onAdLoaded(Ad ad) {
+                interstitialAdfb2.show();
+            }
+
+            @Override
+            public void onAdClicked(Ad ad) {
+
+            }
+
+            @Override
+            public void onLoggingImpression(Ad ad) {
+
+            }
+        });
+        interstitialAdfb2.loadAd();
+
+
+    }
     private void InitializeAdds(){
         //------------------------------- Intertetial Add ------------------------------------------------
+        /*
         interstitialAd=new InterstitialAd(getApplicationContext()); // main Add
         interstitialAd.setAdUnitId(imageAddID);
 
@@ -154,10 +271,7 @@ public class Task_1 extends AppCompatActivity {
         interstitialAd2=new InterstitialAd(getApplicationContext());
         interstitialAd2.setAdUnitId(clickIDIndexes[1]);
         MobileAds.initialize(getApplicationContext(),appID);
-        Log.i("Click","Index 2: "+clickIDIndexes[2]);
-
-        Log.i("click","Image: "+imageAddID);
-
+        */
 
         /*interstitialAd3=new InterstitialAd(Task_1.this);
         interstitialAd3.setAdUnitId(imageAddID);
@@ -171,12 +285,13 @@ public class Task_1 extends AppCompatActivity {
         /*interstitialAd6=new InterstitialAd(Task_1.this);
         interstitialAd6.setAdUnitId(imageAddID);*/
 
-        PrepareInterstitialAdd();
+        //PrepareInterstitialAdd();
 
         //
     }
-
     public void PrepareInterstitialAdd(){
+
+        /*
         interstitialAd.loadAd(new AdRequest.Builder().build());
         interstitialAd.setAdListener(new AdListener(){
             @Override
@@ -330,14 +445,16 @@ public class Task_1 extends AppCompatActivity {
             }
 
         });
+
+        */
     }
     private void checkAddCondition(){
         if (!isThisForClick(user.getAdcounter())){
-            if (interstitialAd.isLoaded() && interstitialAd1.isLoaded() && interstitialAd2.isLoaded()){
+            /*if (interstitialAd.isLoaded() && interstitialAd1.isLoaded() && interstitialAd2.isLoaded()){
                 StartTask();
             }else{
                 final_messageTxt.setText("Please Wait till all the adds are loaded successfully");
-            }
+            }*/
         }else {
             StartTask();
         }
