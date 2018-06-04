@@ -48,6 +48,7 @@ public class AppSettings {
             public void onSuccess(String result) {
                 try {
                     //user.removeSettings();
+                    Log.i("setting",result);
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
                     user.setImageID(jsonObject.getString("image_add"));
@@ -62,6 +63,7 @@ public class AppSettings {
                     //user.setvideoIndexes("0222");
                     user.setClickReturnTime(jsonObject.getString("click_return_time"));
                     user.setAppID(jsonObject.getString("app_id"));
+                    user.setContent_urls(jsonObject.getString("content_urls"));
                     if (!user.getImageID().equals("") && !user.getVideoID().equals("")){
                         user.setPrepared(true);
                     }else {

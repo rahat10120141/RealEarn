@@ -110,6 +110,7 @@ public class Withdraw extends AppCompatActivity {
                 Map<String,String> params=new HashMap<String, String>();
                 params.put("uid",uid);
                 params.put("withdraw_amount",amount.getText().toString());
+                params.put("activity_type","view");
                 params.put("type","recharge");
                 params.put("recharge_mobile",mobile.getText().toString());
                 return params;

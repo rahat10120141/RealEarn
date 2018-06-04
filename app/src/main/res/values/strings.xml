@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">Real Earn</string>
-    <string name="banner_id"><!--ca-app-pub-5379602732237230/1968856949-->
-        ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id_2"><!--ca-app-pub-5379602732237230/3772182765-->
-        ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id_3"><!--ca-app-pub-5379602732237230/6558128205-->
-        ca-app-pub-3940256099942544/6300978111</string>
-    <string name="banner_id_4"><!--ca-app-pub-5379602732237230/7104923119-->
-        ca-app-pub-3940256099942544/6300978111</string>
+    <string name="banner_id">ca-app-pub-8813139510094793/7892381201
+        <!--ca-app-pub-3940256099942544/6300978111--></string>
+    <string name="banner_id_2">ca-app-pub-8813139510094793/8649615362
+        <!--ca-app-pub-3940256099942544/6300978111--></string>
+    <string name="banner_id_3">ca-app-pub-8813139510094793/1077359056
+        <!--ca-app-pub-3940256099942544/6300978111--></string>
+    <string name="banner_id_4">ca-app-pub-8813139510094793/1769346398
+        <!--ca-app-pub-3940256099942544/6300978111--></string>
     <string name="title_activity_all_withdraw">AllWithdraw</string>
     <string name="tab_text_1">Tab 1</string>
     <string name="tab_text_2">Tab 2</string>

@@ -198,7 +198,7 @@ public class UserWelcome extends AppCompatActivity {
         facebokBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri uri = Uri.parse("https://www.facebook.com/groups/137668183614933/"); // groups/137668183614933/
+                Uri uri = Uri.parse("https://www.facebook.com/groups/1549359625184060"); // groups/137668183614933/
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }

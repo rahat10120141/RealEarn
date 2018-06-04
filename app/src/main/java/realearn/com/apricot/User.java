@@ -45,6 +45,8 @@ public class User {
     String videoIndexes;
     String appID;
 
+    String content_urls;
+
     SharedPreferences sharedPreferences;
     public User(Context context){
         this.context=context;
@@ -281,6 +283,17 @@ public class User {
     public void setvideoIndexes(String videoIndexes) {
         sharedPreferences.edit().putString(encrypt("videoIndexes"),encrypt(videoIndexes)).commit();
     }
+
+    public String getContent_urls() {
+        content_urls=sharedPreferences.getString(encrypt("content_urls"),encrypt("9"));
+        return decrypt(content_urls);
+    }
+
+    public void setContent_urls(String content_urls) {
+        sharedPreferences.edit().putString(encrypt("content_urls"),encrypt(content_urls)).commit();
+    }
+
+
 
     // Enf Of App Setting
     public String encrypt(String input) {

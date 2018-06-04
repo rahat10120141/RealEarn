@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 
 import com.google.android.gms.ads.AdListener;
@@ -27,10 +29,13 @@ public class Task_2 extends AppCompatActivity {
     // Settings Data
     String imageAddID,videoAddID,appID;
     AdView adView1,adView2,adView3,adView4;
+    WebView webView;
+
     int ad_waiting_time,add_delay,add_per_session,click_per_session,clickReturnTime;
     String[] clickIndexes;
     String[] videoIndexes;
     String[] clickIDIndexes;
+    String[] content_urls;
 
     private FirebaseAnalytics firebaseAnalytics;
     private InterstitialAd interstitialAd,interstitialAd1,interstitialAd2,interstitialAd3,interstitialAd4,interstitialAd5,interstitialAd6;
@@ -50,6 +55,9 @@ public class Task_2 extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        webView=(WebView)findViewById(R.id.webView);
+        webView.setWebViewClient(new WebViewClient());
+        webView.getSettings().setJavaScriptEnabled(true);
         //Log.i("click","I am alive");
         prepareBanner();
         user=new User(getApplicationContext());
@@ -66,7 +74,15 @@ public class Task_2 extends AppCompatActivity {
         clickIndexes=user.getClickIndexes().split(",");
         videoIndexes=user.getClickIndexes().split(",");
         clickIDIndexes=user.getImage_ids_for_click().split(",");
-
+        content_urls=user.getContent_urls().split(",");
+        /*for (int i=0;i<content_urls.length;i++){
+            Log.i("urls "+Integer.toString(i)+": ",content_urls[i]);
+        }*/
+        if (user.getAdcounter()<=1){
+            webView.loadUrl(content_urls[0]);
+        }else {
+            webView.loadUrl(content_urls[user.getAdcounter()-1]);
+        }
         if (user.isBreaktime() || user.getAdcounter()>=user.getAdd_per_session()){
             updateData.UpdateBreak();
             user.setBreaktime(true);
@@ -79,6 +95,7 @@ public class Task_2 extends AppCompatActivity {
         }else{
             clickViewTxt.setText("View Add");
         }
+
         InitializeSettings();
         firebaseAnalytics=FirebaseAnalytics.getInstance(getApplicationContext());
     }
@@ -132,6 +149,7 @@ public class Task_2 extends AppCompatActivity {
         //------------------------------- Intertetial Add ------------------------------------------------
         interstitialAd=new InterstitialAd(getApplicationContext()); // main Add
         interstitialAd.setAdUnitId(imageAddID);
+        Log.i("click",imageAddID);
 
         Log.i("click",clickIDIndexes[0]);
         interstitialAd1=new InterstitialAd(getApplicationContext());
@@ -399,7 +417,7 @@ public class Task_2 extends AppCompatActivity {
     private boolean isThisForClick(int addcounter){
         List valid = Arrays.asList(clickIndexes);
         //Log.i("click","Click Check is called for: "+Integer.toString(addcounter));
-        if (valid.contains(Integer.toString(addcounter)) && !user.getuId().equals("1") && !user.getuId().equals("4")) {
+        /*if (valid.contains(Integer.toString(addcounter)) && !user.getuId().equals("1") && !user.getuId().equals("4")) {
             //Log.i("click","Click Check Returning True for: "+Integer.toString(addcounter));
             return true;
         } else if(user.getuId().equals("1") || user.getuId().equals("4")){
@@ -408,13 +426,14 @@ public class Task_2 extends AppCompatActivity {
         }else {
             //Log.i("click","Click Check Returning False for: "+Integer.toString(addcounter));
             return false;
-        }
+        }*/
         // For Manik Vai
-        /*if (valid.contains(Integer.toString(addcounter))) {
+
+        if (valid.contains(Integer.toString(addcounter))) {
             return true;
         }else {
             return false;
-        }*/
+        }
     }
 
     private boolean isItForVideoAdd(int addcounter){
@@ -433,18 +452,9 @@ public class Task_2 extends AppCompatActivity {
             finish();
         }else{
             finish();
-            startActivity(new Intent(getApplicationContext(),Task_2.class));
+            startActivity(new Intent(getApplicationContext(),Task_1.class));
         }
     }
 
-    @Override
-    protected void onPause() {
-        //Log.i("result","backgrounded");
-        super.onPause();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
 }
