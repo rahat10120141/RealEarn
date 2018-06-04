@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity {
         login_btn=(Button)findViewById(R.id.btn_login);
         register_btn=(Button)findViewById(R.id.btn_register);
         txt=(TextView) findViewById(R.id.response);
-        //user.removeSettings();
         //user.removeUser();
         if (user.getuId()!=null){
             startActivity(new Intent(MainActivity.this,UserWelcome.class));

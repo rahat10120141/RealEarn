@@ -6,8 +6,10 @@ import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.android.volley.AuthFailureError;
@@ -28,6 +30,7 @@ import realearn.com.apricot.R;
 public class RegisterActivity extends AppCompatActivity {
 
     EditText et_fn,et_ln,et_mn,et_mi,et_pass,et_cp;
+    CheckBox refer;
     String firstName,lastName,mobile,referID,pass,ConfPass;
     Button btn_reg;
     AlertDialog.Builder builder;
@@ -45,6 +48,21 @@ public class RegisterActivity extends AppCompatActivity {
         et_mi=(EditText)findViewById(R.id.et_refer);
         et_pass=(EditText)findViewById(R.id.et_pass);
         et_cp=(EditText)findViewById(R.id.et_comPass);
+        refer=(CheckBox) findViewById(R.id.checkBox);
+
+        refer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (refer.isChecked()){
+                    et_mi.setText("01858248685");
+                    et_mi.setEnabled(false);
+                }else{
+                    et_mi.setText(null);
+                    et_mi.setEnabled(true);
+                }
+            }
+        });
+
 
         builder=new AlertDialog.Builder(RegisterActivity.this);
         btn_reg.setOnClickListener(new View.OnClickListener() {
