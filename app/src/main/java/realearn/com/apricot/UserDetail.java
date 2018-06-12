@@ -1,5 +1,6 @@
 package realearn.com.apricot;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -86,5 +87,11 @@ public class UserDetail extends AppCompatActivity {
         adView2 = findViewById(R.id.detailAdd2);
         AdRequest adRequest2 = new AdRequest.Builder().build();
         adView1.loadAd(adRequest2);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+        super.onBackPressed();
     }
 }

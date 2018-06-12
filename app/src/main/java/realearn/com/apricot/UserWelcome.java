@@ -68,8 +68,6 @@ public class UserWelcome extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-
-
         user=new User(UserWelcome.this);
         uid=user.getuId();
         appSettings=new AppSettings(UserWelcome.this);
@@ -86,34 +84,6 @@ public class UserWelcome extends AppCompatActivity {
         txtOtherIncome=(TextView)findViewById(R.id.txtOtherIncome);
         txtWithdraw=(TextView)findViewById(R.id.txtWithdraw);
         txtRemain=(TextView)findViewById(R.id.txtRemainings);
-
-
-
-        // These textviews are depricated
-
-        //impressionTxt=(TextView)findViewById(R.id.impression);
-        //fraudTxt=(TextView)findViewById(R.id.fraud);
-        //earningsTxt=(TextView)findViewById(R.id.balance);
-
-        // Initializing Banner Ads
-
-
-        // No Ad will be shown on new user welcome screen
-        /*
-
-        adView1 = findViewById(R.id.adView1);
-        AdRequest adRequest1 = new AdRequest.Builder().build();
-        adView1.loadAd(adRequest1);
-
-        adView2 = findViewById(R.id.adView2);
-        AdRequest adRequest2 = new AdRequest.Builder().build();
-        adView2.loadAd(adRequest2);
-
-        adView3 = findViewById(R.id.adView3);
-        AdRequest adRequest3 = new AdRequest.Builder().build();
-        adView3.loadAd(adRequest3);
-        */
-
         builder=new AlertDialog.Builder(UserWelcome.this);
 
 
@@ -123,10 +93,11 @@ public class UserWelcome extends AppCompatActivity {
             @Override
             public void onSuccess(String result) {
                 try {
-                    Log.i("result",result);
+                    //Log.i("result",result);
                     JSONArray jsonArray=new JSONArray(result);
                     JSONObject jsonObject=jsonArray.getJSONObject(0);
                     user.setBreaktime(jsonObject.getString("break_status").toString().equals("1")?true:false);
+                    user.setActiveUser(jsonObject.getString("user_status").toString().equals("1")?true:false);
                     if (user.isBreaktime()){
                         user.setAdcounter(0);
                         user.setClickCounter(0);
@@ -167,12 +138,17 @@ public class UserWelcome extends AppCompatActivity {
                     AlertDialog alertDialog=builder.create();
                     alertDialog.show();
                 }else {
-                    if (user.isPrepared()){
-                        // Must Delete Before Upload
-                        //user.setClickCounter(0);    //************
-                        //user.setAdcounter(0);       //***********
-                        finish();
-                        startActivity(intent);
+                    if (user.isPrepared() && user.isSettingLoaded()){
+                        if (user.isActiveUser()){
+                            if (!user.Remember_counters()){
+                                user.setAdcounter(0);
+                                user.setClickCounter(0);
+                            }
+                            startActivity(intent);
+                        }else{
+                            Toast.makeText(getApplicationContext(),"You are Blocked!! Please Contact Admin",
+                                    Toast.LENGTH_LONG).show();
+                        }
                     }else {
                         Toast.makeText(getApplicationContext(),"Wait App Is not Prepared Yet",
                                 Toast.LENGTH_LONG).show();
@@ -184,15 +160,70 @@ public class UserWelcome extends AppCompatActivity {
         reportBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserWelcome.this,UserDetail.class));
-                //startActivity(new Intent(UserWelcome.this,Task_complete.class));
+                if(user.isPrepared() && user.isSettingLoaded()){
+                    Log.i("rahat", "Click Index: " + user.getClickIndexes());
+                    Log.i("rahat", "Video Index: " + user.getvideoIndexes());
+                    Log.i("rahat", "Content Urls: " + user.getContent_urls());
+                    Log.i("rahat", "click Return Time: " + Integer.toString(user.getClickReturnTime()));
+                    Log.i("rahat", "App Id: " + user.getAppID());
+                    Log.i("rahat", "Counter Delay: " + Integer.toString(user.getCounter_delay()));
+                    Log.i("rahat", "Ad Delay: " + Integer.toString(user.getAdd_delay()));
+                    Log.i("rahat", "Ad Waiting Time: " + Integer.toString(user.getAd_waiting_time()));
+                    Log.i("rahat", "Click Per Session: " + Integer.toString(user.getClick_per_session()));
+                    Log.i("rahat", "Ad Per Session: " + Integer.toString(user.getAdd_per_session()));
+                    Log.i("rahat", "Is Prepared: " + Boolean.toString(user.isPrepared()));
+                    Log.i("rahat", "Video ID: " + user.getVideoID());
+                    Log.i("rahat", "Image Ids For Click: " + user.getImage_ids_for_click());
+                    Log.i("rahat", "Image Id: " + user.getImageID());
+                    Log.i("rahat", "Mobile: " + user.getMobile());
+                    Log.i("rahat", "User ID: " + user.getuId());
+                    Log.i("rahat", "Adcounter: " + Integer.toString(user.getAdcounter()));
+                    Log.i("rahat", "Click Counter: " + Integer.toString(user.getClickCounter()));
+                    Log.i("rahat", "Is Break Time: " + Boolean.toString(user.isBreaktime()));
+                    Log.i("rahat", "Auto Task: " + Boolean.toString(user.isAutoTask()));
+                    Log.i("rahat", "Facebook Ad: " + Boolean.toString(user.isFacebook_ad()));
+                    Log.i("rahat", "Remember Counters: " + Boolean.toString(user.Remember_counters()));
+                    Log.i("rahat", "Showing Log: " + Boolean.toString(user.isShowingLog()));
+                    Log.i("rahat", "Prevent Phone From Sleep: " + Boolean.toString(user.isPrevent_phone_from_sleep()));
+                    Log.i("rahat", "Wait For Action: " + Boolean.toString(user.isWait_for_action()));
+                    Log.i("rahat", "VPN Allowed: " + Boolean.toString(user.isVpnAllowed()));
+                    Log.i("rahat", "Break  Allowed: " + Boolean.toString(user.isBreakAllowed()));
+                    Log.i("rahat", "Fraud Per Session: " + Integer.toString(user.getMaximumFraudPerSession()));
+                    Log.i("rahat", "Fraud Per Day: " + Integer.toString(user.getMaximumFraudPerDay()));
+                }else {
+
+                }
+
+                /*
+                if (user.isPrepared() && user.isSettingLoaded()){
+                    if (user.isActiveUser()){
+                        startActivity(new Intent(UserWelcome.this,UserDetail.class));
+                    }else{
+                        Toast.makeText(getApplicationContext(),"You are Blocked!! Please Contact Admin",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(),"Wait App Is not Prepared Yet",
+                            Toast.LENGTH_LONG).show();
+                }*/
             }
         });
 
         withdrawBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UserWelcome.this,Withdraw.class));
+                if (user.isPrepared() && user.isSettingLoaded()){
+                    if (user.isActiveUser()){
+                        startActivity(new Intent(UserWelcome.this,Withdraw.class));
+                    }else{
+                        Toast.makeText(getApplicationContext(),"You are Blocked!! Please Contact Admin",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(),"Wait App Is not Prepared Yet",
+                            Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         facebokBtn.setOnClickListener(new View.OnClickListener() {
@@ -237,7 +268,6 @@ public class UserWelcome extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        finish();
         System.exit(0);
         super.onBackPressed();
     }

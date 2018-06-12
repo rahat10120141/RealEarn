@@ -3,9 +3,11 @@ package realearn.com.apricot;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(LoginActivity.this,UserWelcome.class));
             finish();
         }
+
+        Log.i("deviceID",Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         etUserId=(EditText) findViewById(R.id.et_userId);
         etPass=(EditText) findViewById(R.id.et_pass);
@@ -87,6 +91,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String,String> params=new HashMap<String, String>();
+                        String deviceId= Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID);
+                        params.put("device_id",deviceId);
                         params.put("mobile",mobile);
                         params.put("userPass",pass);
                         return params;

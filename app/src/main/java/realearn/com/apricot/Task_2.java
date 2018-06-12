@@ -53,7 +53,6 @@ public class Task_2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_1);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         webView=(WebView)findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
@@ -70,7 +69,13 @@ public class Task_2 extends AppCompatActivity {
         messageTxt2=(TextView)findViewById(R.id.message2);
         final_messageTxt=(TextView)findViewById(R.id.final_message);
 
-        messageTxt.setText("Ad Is requested. Please Wait!!!");
+        if (user.isShowingLog()){
+            messageTxt.setText("Ad Is requested. Please Wait!!!");
+        }
+        if (user.isPrevent_phone_from_sleep()){
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+
         clickIndexes=user.getClickIndexes().split(",");
         videoIndexes=user.getClickIndexes().split(",");
         clickIDIndexes=user.getImage_ids_for_click().split(",");
@@ -91,9 +96,9 @@ public class Task_2 extends AppCompatActivity {
         }
 
         if (isThisForClick(user.getAdcounter())){
-            clickViewTxt.setText("Click Add");
+            clickViewTxt.setText("Get Gift");
         }else{
-            clickViewTxt.setText("View Add");
+            clickViewTxt.setText("Wait For Gift");
         }
 
         InitializeSettings();
@@ -107,11 +112,11 @@ public class Task_2 extends AppCompatActivity {
             imageAddID=user.getImageID();
         }
         videoAddID=user.getVideoID();
-        ad_waiting_time=user.getAd_waiting_time();
-        add_delay=user.getAdd_delay();
+        ad_waiting_time=user.getAd_waiting_time()*1000;
+        add_delay=user.getAdd_delay()*1000;
         add_per_session=user.getAdd_per_session();
         click_per_session=user.getClick_per_session();
-        clickReturnTime=user.getClickReturnTime();
+        clickReturnTime=user.getClickReturnTime()*1000;
         appID=user.getAppID();
         impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
         clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
@@ -124,7 +129,10 @@ public class Task_2 extends AppCompatActivity {
         adDelay=new CountDownTimer(add_delay,1000) {
             @Override
             public void onTick(long l) {
-                final_messageTxt.setText("All the ads are loaded, Please wait till it shows!");
+                if (user.isShowingLog()){
+                    final_messageTxt.setText("All the ads are loaded, Please wait till it shows!");
+                }
+
             }
             @Override
             public void onFinish() {
@@ -149,19 +157,12 @@ public class Task_2 extends AppCompatActivity {
         //------------------------------- Intertetial Add ------------------------------------------------
         interstitialAd=new InterstitialAd(getApplicationContext()); // main Add
         interstitialAd.setAdUnitId(imageAddID);
-        Log.i("click",imageAddID);
-
-        Log.i("click",clickIDIndexes[0]);
         interstitialAd1=new InterstitialAd(getApplicationContext());
         interstitialAd1.setAdUnitId(clickIDIndexes[0]);
 
         interstitialAd2=new InterstitialAd(getApplicationContext());
         interstitialAd2.setAdUnitId(clickIDIndexes[1]);
         MobileAds.initialize(getApplicationContext(),appID);
-        Log.i("Click","Index 2: "+clickIDIndexes[2]);
-
-        Log.i("click","Image: "+imageAddID);
-
 
         /*interstitialAd3=new InterstitialAd(Task_1.this);
         interstitialAd3.setAdUnitId(imageAddID);
@@ -185,7 +186,9 @@ public class Task_2 extends AppCompatActivity {
         interstitialAd.setAdListener(new AdListener(){
             @Override
             public void onAdLoaded() {
-                messageTxt.setText("Main Add Successfully Loaded");
+                if (user.isShowingLog()){
+                    messageTxt.setText("Main Add Successfully Loaded");
+                }
                 checkAddCondition();
                 super.onAdLoaded();
             }
@@ -193,9 +196,24 @@ public class Task_2 extends AppCompatActivity {
             @Override
             public void onAdClosed() {
                 if (isThisForClick(user.getAdcounter())){
-                    messageTxt.setText("You Have To Click This Add, Do not Close It");
-                    InitializeAdds();
-                    StartTask();
+                    if (user.isWait_for_action()){
+                        if (user.isShowingLog()){
+                            messageTxt.setText("You Have To Click This Add, Do not Close It");
+                        }
+                        InitializeAdds();
+                        StartTask();
+                    }else{
+                        user.setAdcounter(user.getAdcounter()+1);
+                        updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                        CheckUserBreak();
+                    }
+
+                }else{
+                    if (!user.isAutoTask()){
+                        user.setAdcounter(user.getAdcounter()+1);
+                        updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                        CheckUserBreak();
+                    }
                 }
 
                 super.onAdClosed();
@@ -203,32 +221,34 @@ public class Task_2 extends AppCompatActivity {
 
             @Override
             public void onAdOpened() {
-                Log.i("Click","Showing Main Add");
-                if (!isThisForClick(user.getAdcounter())){
-                    adTimer=new CountDownTimer(6000,1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
+                if (user.isAutoTask()){
+                    if (!isThisForClick(user.getAdcounter())){
+                        adTimer=new CountDownTimer(ad_waiting_time,1000) {
+                            @Override
+                            public void onTick(long millisUntilFinished) {
 
-                        }
+                            }
 
-                        @Override
-                        public void onFinish() {
-                            user.setAdcounter(user.getAdcounter()+1);
-                            updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
-                            adDelay.cancel();
-                            //adWaitingTime.cancel();
-                            CheckUserBreak();
-                            adTimer.cancel();
-                            Log.i("Click","Main Add Opened And Close");
-                        }
-                    }.start();
+                            @Override
+                            public void onFinish() {
+                                user.setAdcounter(user.getAdcounter()+1);
+                                updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                                adDelay.cancel();
+                                //adWaitingTime.cancel();
+                                CheckUserBreak();
+                                adTimer.cancel();
+                            }
+                        }.start();
+                    }
                 }
                 super.onAdOpened();
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
-                messageTxt.setText("Please Wait While requestng Main Add, Code: "+Integer.toString(i));
+                if (user.isShowingLog()){
+                    messageTxt.setText("Please Wait While requestng Main Add, Code: "+Integer.toString(i));
+                }
                 interstitialAd.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
@@ -264,8 +284,7 @@ public class Task_2 extends AppCompatActivity {
         interstitialAd1.setAdListener(new AdListener(){
             @Override
             public void onAdOpened() {
-                Log.i("Click","Showing Add-1");
-                adTimer=new CountDownTimer(5000,1000) {
+                adTimer=new CountDownTimer(ad_waiting_time,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
 
@@ -283,14 +302,18 @@ public class Task_2 extends AppCompatActivity {
 
             @Override
             public void onAdLoaded() {
-                messageTxt1.setText("Add-1 Successfully Loaded");
+                if (user.isShowingLog()){
+                    messageTxt1.setText("Add-1 Successfully Loaded");
+                }
                 checkAddCondition();
                 super.onAdLoaded();
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
-                messageTxt1.setText("Please Wait While requestng Add-1, Code: "+Integer.toString(i));
+                if (user.isShowingLog()){
+                    messageTxt1.setText("Please Wait While requestng Add-1, Code: "+Integer.toString(i));
+                }
                 interstitialAd1.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
@@ -302,8 +325,7 @@ public class Task_2 extends AppCompatActivity {
         interstitialAd2.setAdListener(new AdListener(){
             @Override
             public void onAdOpened() {
-                Log.i("Click","Showing Add-2");
-                adTimer=new CountDownTimer(5000,1000) {
+                adTimer=new CountDownTimer(ad_waiting_time,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
 
@@ -320,15 +342,18 @@ public class Task_2 extends AppCompatActivity {
 
             @Override
             public void onAdLoaded() {
-                messageTxt2.setText("Add-2 Successfully Loaded");
+                if (user.isShowingLog()){
+                    messageTxt2.setText("Add-2 Successfully Loaded");
+                }
                 checkAddCondition();
                 super.onAdLoaded();
             }
 
             @Override
             public void onAdFailedToLoad(int i) {
-                //Log.i("Click",Integer.toString(i));
-                messageTxt2.setText("Please Wait While requestng Add-2, Code: "+Integer.toString(i));
+                if (user.isShowingLog()){
+                    messageTxt2.setText("Please Wait While requestng Add-2, Code: "+Integer.toString(i));
+                }
                 interstitialAd2.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
@@ -340,7 +365,9 @@ public class Task_2 extends AppCompatActivity {
             if (interstitialAd.isLoaded() && interstitialAd1.isLoaded() && interstitialAd2.isLoaded()){
                 StartTask();
             }else{
-                final_messageTxt.setText("Please Wait till all the adds are loaded successfully");
+                if (user.isShowingLog()){
+                    final_messageTxt.setText("Please Wait till all the adds are loaded successfully");
+                }
             }
         }else {
             StartTask();
@@ -446,15 +473,27 @@ public class Task_2 extends AppCompatActivity {
     }
     private void CheckUserBreak(){
         if (user.getAdcounter()>=user.getAdd_per_session()){
-            updateData.UpdateBreak();
-            user.setBreaktime(true);
+            if (user.isBreakAllowed()){
+                updateData.UpdateBreak();
+                user.setBreaktime(true);
+            }
             startActivity(new Intent(getApplicationContext(),Task_complete.class));
             finish();
-        }else{
+        }else {
             finish();
-            startActivity(new Intent(getApplicationContext(),Task_1.class));
+            startActivity(new Intent(getApplicationContext(), Task_1.class));
         }
     }
+    private void CheckFraudStatus(){
+        Log.i("fraud",Integer.toString(user.getFraud()));
+        if (user.getFraud()>user.getMaximumFraudPerSession()){
 
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+        super.onBackPressed();
+    }
 
 }

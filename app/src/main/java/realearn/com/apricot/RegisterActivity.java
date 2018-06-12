@@ -54,7 +54,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (refer.isChecked()){
-                    et_mi.setText("01858248685");
+                    et_mi.setText("01710145934");
                     et_mi.setEnabled(false);
                 }else{
                     et_mi.setText(null);

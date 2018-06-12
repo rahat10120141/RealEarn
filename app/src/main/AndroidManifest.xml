@@ -8,13 +8,13 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
+        android:name=".NotificationManager"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:name=".NotificationManager">
+        android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,10 +54,15 @@
             android:name=".Task_2"
             android:noHistory="true" />
         <activity android:name=".Task_complete" />
-        <activity
+        <!--
+            <activity
             android:name=".AllWithdraw"
             android:label="@string/title_activity_all_withdraw"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        -->
+        <activity android:name=".FBTask_1" />
+        <activity android:name=".FBTask_2" />
+        <activity android:name=".TestActivity"></activity>
     </application>
 
 </manifest>

@@ -36,7 +36,7 @@
             android:id="@+id/claim_bonus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Claim Your Money"
+            android:text="Claim Your Point"
             android:background="@color/colorPrimary"
             android:textColor="@color/white"
             android:textSize="30dp"

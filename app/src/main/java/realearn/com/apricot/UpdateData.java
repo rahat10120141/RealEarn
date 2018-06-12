@@ -202,6 +202,33 @@ public class UpdateData {
         };
         Mysingleton.getmInstance(context).AddToRequestQue(stringRequest);
     }
+    public void BlockMyself(){
+        stringRequest=new StringRequest(Request.Method.POST, Appurls.blockMyself, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONArray jsonArray=new JSONArray(response);
+                    JSONObject jsonObject=jsonArray.getJSONObject(0);
+                    String code=jsonObject.getString("code");
+                }catch (JSONException e){
+
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String,String> params=new HashMap<String, String>();
+                params.put("uid",uid);
+                return params;
+            }
+        };
+        Mysingleton.getmInstance(context).AddToRequestQue(stringRequest);
+    }
 
     /*
     public void DisplayAlert(final String code){

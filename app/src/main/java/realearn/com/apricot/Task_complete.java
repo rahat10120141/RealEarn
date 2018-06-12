@@ -25,7 +25,7 @@ public class Task_complete extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_complete);
-        PrepareBanner();
+        //PrepareBanner();
 
         user=new User(getApplicationContext());
         updateData=new UpdateData(getApplicationContext());
@@ -34,29 +34,32 @@ public class Task_complete extends AppCompatActivity {
         rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
             public void onRewardedVideoAdLoaded() {
-                Log.i("rewarded","Loaded");
             }
 
             @Override
             public void onRewardedVideoAdOpened() {
-                Log.i("rewarded","Opened");
             }
 
             @Override
             public void onRewardedVideoStarted() {
-                Log.i("rewarded","Started");
             }
 
             @Override
             public void onRewardedVideoAdClosed() {
-                Log.i("rewarded","Closed");
             }
 
             @Override
             public void onRewarded(RewardItem rewardItem) {
-                updateData.ProcessCompleteTask();
-                startActivity(new Intent(getApplicationContext(),UserWelcome.class));
-                finish();
+                if (user.getClickCounter()<user.getClick_per_session()){
+                    Log.i("rahat","user did not click the full add");
+                    startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                    finish();
+                }else{
+                    Log.i("rahat","user click the full add");
+                    updateData.ProcessCompleteTask();
+                    startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                    finish();
+                }
             }
 
             @Override
@@ -66,7 +69,6 @@ public class Task_complete extends AppCompatActivity {
 
             @Override
             public void onRewardedVideoAdFailedToLoad(int i) {
-                Log.i("rewarded","Failed To Load Eeeor: "+Integer.toString(i));
             }
 
             @Override
@@ -75,19 +77,29 @@ public class Task_complete extends AppCompatActivity {
             }
         });
 
-        loadRewardedVideo();
+        //loadRewardedVideo();
         completeTask=(Button) findViewById(R.id.claim_bonus);
         completeTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.i("rahat","I am clicked");
                 //startActivity(new Intent(getApplicationContext(),UserWelcome.class));
                 //finish();
                 if (rewardedVideoAd.isLoaded()){
+                    Log.i("rahat","Rewarded Loaded");
                     rewardedVideoAd.show();
                 }else{
-                    updateData.ProcessCompleteTask();
-                    startActivity(new Intent(getApplicationContext(),UserWelcome.class));
-                    finish();
+                    if (user.getClickCounter()<user.getClick_per_session()){
+                        Log.i("rahat","user did not click the full add");
+                        startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                        finish();
+                    }else{
+                        Log.i("rahat","user click the full add");
+                        updateData.ProcessCompleteTask();
+                        startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                        finish();
+                    }
+
                     //loadRewardedVideo();
                 }
             }
@@ -120,5 +132,12 @@ public class Task_complete extends AppCompatActivity {
         adView5=(AdView) findViewById(R.id.comp_ad5);
         AdRequest adRequest5=new AdRequest.Builder().build();
         adView5.loadAd(adRequest5);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+        super.onBackPressed();
     }
 }

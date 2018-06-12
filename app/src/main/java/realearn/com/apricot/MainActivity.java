@@ -15,7 +15,7 @@ import realearn.com.apricot.R;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button login_btn,register_btn;
+    Button login_btn,register_btn,test_button;
     TextView txt;
     RequestQueue requestQueue;
 
@@ -27,11 +27,10 @@ public class MainActivity extends AppCompatActivity {
         User user=new User(MainActivity.this);
         login_btn=(Button)findViewById(R.id.btn_login);
         register_btn=(Button)findViewById(R.id.btn_register);
-        txt=(TextView) findViewById(R.id.response);
-        //user.removeUser();
+        //test_button=(Button)findViewById(R.id.btn_rtest);
         if (user.getuId()!=null){
-            startActivity(new Intent(MainActivity.this,UserWelcome.class));
             finish();
+            startActivity(new Intent(MainActivity.this,UserWelcome.class));
         }else {
             login_btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -46,6 +45,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+        /*
+        test_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),TestActivity.class));
+            }
+        });
+        */
 
     }
 }

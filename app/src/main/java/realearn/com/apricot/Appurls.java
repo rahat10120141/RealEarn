@@ -7,8 +7,8 @@ package realearn.com.apricot;
 public class Appurls {
 
    //public static String baseUrl="http://ragory.com/index.php/";
-   public static String baseUrl="http://manik.ragory.com/index.php/";
-   //public static String baseUrl="http://192.168.1.115/re/index.php/";
+   //public static String baseUrl="http://manik.ragory.com/index.php/";
+   public static String baseUrl="http://192.168.241.2/re/index.php/";
    public static String login_url= baseUrl+ "login/userLogin";
    public static String reg_ur=baseUrl+"login/register";
    public static String add_urls=baseUrl+"addmanager/adData";
@@ -21,5 +21,7 @@ public class Appurls {
    public static String withdraw_money=baseUrl+"users/submitWithdraw";
    public static String updateFraudCount=baseUrl+"addmanager/ProcessFraud";
    public static String updateDailyUserLog=baseUrl+"users/updateUserLog";
+   public static String appSettings=baseUrl+"addmanager/getAppSettings";
+   public static String blockMyself=baseUrl+"users/blockMyself";
 
 }
