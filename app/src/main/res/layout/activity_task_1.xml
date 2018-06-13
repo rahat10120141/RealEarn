@@ -30,7 +30,7 @@
                         android:layout_weight="1"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:text="Impression"
+                        android:text="Articles"
                         android:textSize="30dp"
                         android:textColor="@color/black"
                         android:textStyle="bold"
@@ -83,7 +83,7 @@
                     android:id="@+id/clickView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Click Add"
+                    android:text="Get Gift"
                     android:textColor="@color/white"
                     android:textSize="60dp"
                     android:textStyle="bold"
@@ -194,6 +194,16 @@
                     android:textSize="15dp"
                     android:paddingLeft="10dp"
                     android:paddingTop="5dp"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:orientation="vertical">
+                <Button
+                    android:id="@+id/nxtArticleMain"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Next Article"/>
             </LinearLayout>
 
 

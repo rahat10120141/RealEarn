@@ -116,6 +116,7 @@ public class UserWelcome extends AppCompatActivity {
                     txtRefIncome.setText(jsonObject.getString("referral_income").toString());
                     txtWithdraw.setText(jsonObject.getString("total_withdraw").toString());
                     txtRemain.setText(jsonObject.getString("balance").toString());
+                    user.setDailyFraud(Integer.parseInt(jsonObject.getString("daily_fraud")));
 
                     //earningsTxt.setText(jsonObject.getString("balance").toString());
                     //impressionTxt.setText(jsonObject.getString("impression").toString());
@@ -190,6 +191,7 @@ public class UserWelcome extends AppCompatActivity {
                     Log.i("rahat", "Break  Allowed: " + Boolean.toString(user.isBreakAllowed()));
                     Log.i("rahat", "Fraud Per Session: " + Integer.toString(user.getMaximumFraudPerSession()));
                     Log.i("rahat", "Fraud Per Day: " + Integer.toString(user.getMaximumFraudPerDay()));
+                    startActivity(new Intent(getApplicationContext(),UserDetail.class));
                 }else {
 
                 }

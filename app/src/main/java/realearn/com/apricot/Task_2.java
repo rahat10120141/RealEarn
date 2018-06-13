@@ -7,10 +7,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
@@ -42,12 +45,14 @@ public class Task_2 extends AppCompatActivity {
     private RewardedVideoAd rewardedVideoAd;
 
     TextView impressionTxt,clicksTxt,messageTxt,messageTxt1,messageTxt2,final_messageTxt,clickViewTxt;
-    private boolean willClick=false;
+    private boolean int_opened=false,int_1_opened=false,int_2_opened=false;
     private CountDownTimer adDelay,adWaitingTime,clickTimer,adTimer;
 
     User user;
     AppSettings appSettings;
     UpdateData updateData;
+
+    Button nextArticle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +62,8 @@ public class Task_2 extends AppCompatActivity {
         webView=(WebView)findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
+        nextArticle=(Button)findViewById(R.id.nxtArticleMain);
+
         //Log.i("click","I am alive");
         prepareBanner();
         user=new User(getApplicationContext());
@@ -75,7 +82,6 @@ public class Task_2 extends AppCompatActivity {
         if (user.isPrevent_phone_from_sleep()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
-
         clickIndexes=user.getClickIndexes().split(",");
         videoIndexes=user.getClickIndexes().split(",");
         clickIDIndexes=user.getImage_ids_for_click().split(",");
@@ -94,7 +100,24 @@ public class Task_2 extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(),UserWelcome.class));
             finish();
         }
-
+        if (user.isAutoTask()){
+            nextArticle.setEnabled(false);
+        }else{
+            nextArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(int_opened && int_1_opened && int_2_opened){
+                        Log.i("rahat","All Ad Opened");
+                        user.setAdcounter(user.getAdcounter()+1);
+                        updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                        CheckUserBreak();
+                    }else{
+                        Log.i("rahat","All Ad Did not Opened");
+                        startActivity(new Intent(getApplicationContext(),Task_1.class));
+                    }
+                }
+            });
+        }
         if (isThisForClick(user.getAdcounter())){
             clickViewTxt.setText("Get Gift");
         }else{
@@ -120,7 +143,7 @@ public class Task_2 extends AppCompatActivity {
         appID=user.getAppID();
         impressionTxt.setText(Integer.toString(user.getAdcounter())+"/"+Integer.toString(add_per_session));
         clicksTxt.setText(Integer.toString(user.getClickCounter())+"/"+Integer.toString(click_per_session));
-        if (user.isPrepared()){
+        if (user.isPrepared() && user.isSettingLoaded()){
             InitializeAdds();
             prepareVideoAdd();
         }
@@ -208,19 +231,14 @@ public class Task_2 extends AppCompatActivity {
                         CheckUserBreak();
                     }
 
-                }else{
-                    if (!user.isAutoTask()){
-                        user.setAdcounter(user.getAdcounter()+1);
-                        updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
-                        CheckUserBreak();
-                    }
                 }
-
                 super.onAdClosed();
             }
 
             @Override
             public void onAdOpened() {
+                int_opened=true;
+                Log.i("rahat","int_opened: "+Boolean.toString(int_opened));
                 if (user.isAutoTask()){
                     if (!isThisForClick(user.getAdcounter())){
                         adTimer=new CountDownTimer(ad_waiting_time,1000) {
@@ -272,8 +290,7 @@ public class Task_2 extends AppCompatActivity {
                     }.start();
 
                 }else {
-                    user.setFraud(user.getFraud()+1);
-                    updateData.UpdateFraud();
+                    UpdateFraudStatus();
                 }
                 super.onAdLeftApplication();
             }
@@ -284,6 +301,8 @@ public class Task_2 extends AppCompatActivity {
         interstitialAd1.setAdListener(new AdListener(){
             @Override
             public void onAdOpened() {
+                int_1_opened=true;
+                Log.i("rahat","int_1_opened: "+Boolean.toString(int_1_opened));
                 adTimer=new CountDownTimer(ad_waiting_time,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -317,6 +336,12 @@ public class Task_2 extends AppCompatActivity {
                 interstitialAd1.loadAd(new AdRequest.Builder().build());
                 super.onAdFailedToLoad(i);
             }
+
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
         });
 
 
@@ -325,6 +350,8 @@ public class Task_2 extends AppCompatActivity {
         interstitialAd2.setAdListener(new AdListener(){
             @Override
             public void onAdOpened() {
+                int_2_opened=true;
+                Log.i("rahat","int_2_opened: "+Boolean.toString(int_2_opened));
                 adTimer=new CountDownTimer(ad_waiting_time,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -358,6 +385,11 @@ public class Task_2 extends AppCompatActivity {
                 super.onAdFailedToLoad(i);
             }
 
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
         });
     }
     private void checkAddCondition(){
@@ -377,19 +409,46 @@ public class Task_2 extends AppCompatActivity {
         adView1=(AdView) findViewById(R.id.task_1_ad1);
         AdRequest adRequest1=new AdRequest.Builder().build();
         adView1.loadAd(adRequest1);
-
+        adView1.setAdListener(new AdListener(){
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
+        });
 
         adView2=(AdView) findViewById(R.id.task_1_ad2);
         AdRequest adRequest2=new AdRequest.Builder().build();
         adView2.loadAd(adRequest2);
+        adView2.setAdListener(new AdListener(){
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
+        });
 
         adView3=(AdView) findViewById(R.id.task_1_ad3);
         AdRequest adRequest3=new AdRequest.Builder().build();
         adView3.loadAd(adRequest3);
+        adView3.setAdListener(new AdListener(){
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
+        });
 
         adView4=(AdView) findViewById(R.id.task_1_ad4);
         AdRequest adRequest4=new AdRequest.Builder().build();
         adView4.loadAd(adRequest4);
+        adView4.setAdListener(new AdListener(){
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
+        });
     }
     public void prepareVideoAdd(){
         rewardedVideoAd=MobileAds.getRewardedVideoAdInstance(getApplicationContext());
@@ -422,7 +481,7 @@ public class Task_2 extends AppCompatActivity {
 
             @Override
             public void onRewardedVideoAdLeftApplication() {
-
+                UpdateFraudStatus();
             }
 
             @Override
@@ -485,10 +544,33 @@ public class Task_2 extends AppCompatActivity {
         }
     }
     private void CheckFraudStatus(){
-        Log.i("fraud",Integer.toString(user.getFraud()));
-        if (user.getFraud()>user.getMaximumFraudPerSession()){
-
+        Log.i("fraud","Session: "+Integer.toString(user.getFraud()));
+        Log.i("fraud","Daily: "+Integer.toString(user.getDailyFraud()));
+        if (user.getDailyFraud()>user.getMaximumFraudPerDay()){
+            user.setActiveUser(false);
+            updateData.BlockMyself();
+            user.setFraud(0);
+            Toast.makeText(getApplicationContext(),"You have Clicked Too Many Ads",
+                    Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+            finish();
+        }else{
+            if (user.getFraud()>user.getMaximumFraudPerSession()){
+                updateData.UpdateBreak();
+                user.setBreaktime(true);
+                user.setFraud(0);
+                Toast.makeText(getApplicationContext(),"You have Clicked Too Many Ads",
+                        Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                finish();
+            }
         }
+    }
+    private void UpdateFraudStatus(){
+        user.setFraud(user.getFraud()+1);
+        user.setDailyFraud(user.getDailyFraud()+1);
+        updateData.UpdateFraud();
+        CheckFraudStatus();
     }
     @Override
     public void onBackPressed() {

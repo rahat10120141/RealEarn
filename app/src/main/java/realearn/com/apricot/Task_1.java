@@ -57,12 +57,14 @@ public class Task_1 extends AppCompatActivity {
     private RewardedVideoAd rewardedVideoAd;
 
     TextView impressionTxt,clicksTxt,messageTxt,messageTxt1,messageTxt2,final_messageTxt,clickViewTxt;
-    private boolean willClick=false;
+    private boolean int_opened=false,int_1_opened=false,int_2_opened=false;
     private CountDownTimer adDelay,adWaitingTime,clickTimer,adTimer;
 
     User user;
     AppSettings appSettings;
     UpdateData updateData;
+
+    Button nextArticle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,8 @@ public class Task_1 extends AppCompatActivity {
         webView=(WebView)findViewById(R.id.webView);
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
+        nextArticle=(Button)findViewById(R.id.nxtArticleMain);
+
         //Log.i("click","I am alive");
         prepareBanner();
         user=new User(getApplicationContext());
@@ -90,7 +94,6 @@ public class Task_1 extends AppCompatActivity {
         if (user.isPrevent_phone_from_sleep()){
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         }
-
         clickIndexes=user.getClickIndexes().split(",");
         videoIndexes=user.getClickIndexes().split(",");
         clickIDIndexes=user.getImage_ids_for_click().split(",");
@@ -109,7 +112,24 @@ public class Task_1 extends AppCompatActivity {
             startActivity(new Intent(getApplicationContext(),UserWelcome.class));
             finish();
         }
-
+        if (user.isAutoTask()){
+            nextArticle.setEnabled(false);
+        }else{
+            nextArticle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(int_opened && int_1_opened && int_2_opened){
+                        Log.i("rahat","All Ad Opened");
+                        user.setAdcounter(user.getAdcounter()+1);
+                        updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                        CheckUserBreak();
+                    }else{
+                        Log.i("rahat","All Ad Did not Opened");
+                        startActivity(new Intent(getApplicationContext(),Task_2.class));
+                    }
+                }
+            });
+        }
         if (isThisForClick(user.getAdcounter())){
             clickViewTxt.setText("Get Gift");
         }else{
@@ -223,20 +243,16 @@ public class Task_1 extends AppCompatActivity {
                         CheckUserBreak();
                     }
 
-                }else{
-                    if (!user.isAutoTask()){
-                        user.setAdcounter(user.getAdcounter()+1);
-                        updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
-                        CheckUserBreak();
-                    }
                 }
-
                 super.onAdClosed();
             }
 
             @Override
             public void onAdOpened() {
+                int_opened=true;
+                Log.i("rahat","int_opened: "+Boolean.toString(int_opened));
                 if (user.isAutoTask()){
+
                     if (!isThisForClick(user.getAdcounter())){
                         adTimer=new CountDownTimer(ad_waiting_time,1000) {
                             @Override
@@ -287,9 +303,7 @@ public class Task_1 extends AppCompatActivity {
                     }.start();
 
                 }else {
-                    user.setFraud(user.getFraud()+1);
-                    updateData.UpdateFraud();
-                    CheckFraudStatus();
+                   UpdateFraudStatus();
                 }
                 super.onAdLeftApplication();
             }
@@ -300,6 +314,8 @@ public class Task_1 extends AppCompatActivity {
         interstitialAd1.setAdListener(new AdListener(){
             @Override
             public void onAdOpened() {
+                int_1_opened=true;
+                Log.i("rahat","int_1_opened: "+Boolean.toString(int_1_opened));
                 adTimer=new CountDownTimer(ad_waiting_time,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -336,9 +352,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onAdLeftApplication() {
-                user.setFraud(user.getFraud()+1);
-                updateData.UpdateFraud();
-                CheckFraudStatus();
+                UpdateFraudStatus();
                 super.onAdLeftApplication();
             }
         });
@@ -349,6 +363,8 @@ public class Task_1 extends AppCompatActivity {
         interstitialAd2.setAdListener(new AdListener(){
             @Override
             public void onAdOpened() {
+                int_2_opened=true;
+                Log.i("rahat","int_2_opened: "+Boolean.toString(int_2_opened));
                 adTimer=new CountDownTimer(ad_waiting_time,1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
@@ -384,9 +400,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onAdLeftApplication() {
-                user.setFraud(user.getFraud()+1);
-                updateData.UpdateFraud();
-                CheckFraudStatus();
+                UpdateFraudStatus();
                 super.onAdLeftApplication();
             }
         });
@@ -411,9 +425,8 @@ public class Task_1 extends AppCompatActivity {
         adView1.setAdListener(new AdListener(){
             @Override
             public void onAdLeftApplication() {
-                user.setFraud(user.getFraud()+1);
-                updateData.UpdateFraud();
-                CheckFraudStatus();
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
             }
         });
 
@@ -423,9 +436,7 @@ public class Task_1 extends AppCompatActivity {
         adView2.setAdListener(new AdListener(){
             @Override
             public void onAdLeftApplication() {
-                user.setFraud(user.getFraud()+1);
-                updateData.UpdateFraud();
-                CheckFraudStatus();
+                UpdateFraudStatus();
                 super.onAdLeftApplication();
             }
         });
@@ -436,9 +447,7 @@ public class Task_1 extends AppCompatActivity {
         adView3.setAdListener(new AdListener(){
             @Override
             public void onAdLeftApplication() {
-                user.setFraud(user.getFraud()+1);
-                updateData.UpdateFraud();
-                CheckFraudStatus();
+                UpdateFraudStatus();
                 super.onAdLeftApplication();
             }
         });
@@ -449,9 +458,7 @@ public class Task_1 extends AppCompatActivity {
         adView4.setAdListener(new AdListener(){
             @Override
             public void onAdLeftApplication() {
-                user.setFraud(user.getFraud()+1);
-                updateData.UpdateFraud();
-                CheckFraudStatus();
+                UpdateFraudStatus();
                 super.onAdLeftApplication();
             }
         });
@@ -487,9 +494,7 @@ public class Task_1 extends AppCompatActivity {
 
             @Override
             public void onRewardedVideoAdLeftApplication() {
-                user.setFraud(user.getFraud()+1);
-                updateData.UpdateFraud();
-                CheckFraudStatus();
+                UpdateFraudStatus();
             }
 
             @Override
@@ -552,18 +557,33 @@ public class Task_1 extends AppCompatActivity {
         }
     }
     private void CheckFraudStatus(){
-        if (user.getFraud()>user.getMaximumFraudPerSession()){
-            updateData.UpdateBreak();
-            user.setBreaktime(true);
+        Log.i("fraud","Session: "+Integer.toString(user.getFraud()));
+        Log.i("fraud","Daily: "+Integer.toString(user.getDailyFraud()));
+        if (user.getDailyFraud()>user.getMaximumFraudPerDay()){
+            user.setActiveUser(false);
+            updateData.BlockMyself();
+            user.setFraud(0);
             Toast.makeText(getApplicationContext(),"You have Clicked Too Many Ads",
                     Toast.LENGTH_LONG).show();
             startActivity(new Intent(getApplicationContext(),UserWelcome.class));
             finish();
+        }else{
+            if (user.getFraud()>user.getMaximumFraudPerSession()){
+                updateData.UpdateBreak();
+                user.setBreaktime(true);
+                user.setFraud(0);
+                Toast.makeText(getApplicationContext(),"You have Clicked Too Many Ads",
+                        Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                finish();
+            }
         }
-        if (user.getFraud()>user.getMaximumFraudPerDay()){
-            user.setActiveUser(false);
-            updateData.BlockMyself();
-        }
+    }
+    private void UpdateFraudStatus(){
+        user.setFraud(user.getFraud()+1);
+        user.setDailyFraud(user.getDailyFraud()+1);
+        updateData.UpdateFraud();
+        CheckFraudStatus();
     }
     @Override
     public void onBackPressed() {

@@ -45,8 +45,8 @@ public class User {
     public String image_ids_for_click;
 
     public boolean prepared;
-    int fraud=0;
-    int totImoression;
+    int fraud;
+    int dailyFraud;
     int add_per_session;
     int click_per_session;
     int ad_waiting_time;
@@ -515,21 +515,37 @@ public class User {
         }
     }
     public int getFraud() {
+        try {
+            fraud= Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("fraud"),encrypt("0"))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return fraud;
-    }   // Depricated
+    }
 
     public void setFraud(int fraud) {
-        this.fraud = fraud;
-    }   // Depricated
+        try {
+            sharedPreferences.edit().putString(encrypt("fraud"),encrypt(Integer.toString(fraud))).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public int getDailyFraud() {
+        try {
+            dailyFraud= Integer.parseInt(decrypt(sharedPreferences.getString(encrypt("dailyFraud"),encrypt("0"))));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dailyFraud;
+    }
 
-    public int getTotImoression() {
-        return totImoression;
-    }   // Depricated
-
-    public void setTotImoression(int totImoression) {
-        this.totImoression = totImoression;
-    }   // Depricated
-
+    public void setDailyFraud(int dailyFraud) {
+        try {
+            sharedPreferences.edit().putString(encrypt("dailyFraud"),encrypt(Integer.toString(dailyFraud))).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     // App Setting Methods
 
