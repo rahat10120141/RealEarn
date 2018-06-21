@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -85,7 +86,8 @@ public class UserWelcome extends AppCompatActivity {
         txtWithdraw=(TextView)findViewById(R.id.txtWithdraw);
         txtRemain=(TextView)findViewById(R.id.txtRemainings);
         builder=new AlertDialog.Builder(UserWelcome.this);
-
+        Log.i("rahat","Mobile : "+user.getMobile());
+        Log.i("rahat","I am loaded");
 
         //impressionTxt.setText("lo");
 
@@ -117,6 +119,7 @@ public class UserWelcome extends AppCompatActivity {
                     txtWithdraw.setText(jsonObject.getString("total_withdraw").toString());
                     txtRemain.setText(jsonObject.getString("balance").toString());
                     user.setDailyFraud(Integer.parseInt(jsonObject.getString("daily_fraud")));
+                    user.setMobile(jsonObject.getString("mobile").toString());
 
                     //earningsTxt.setText(jsonObject.getString("balance").toString());
                     //impressionTxt.setText(jsonObject.getString("impression").toString());
@@ -146,12 +149,13 @@ public class UserWelcome extends AppCompatActivity {
                                 user.setClickCounter(0);
                             }
                             startActivity(intent);
+                            finish();
                         }else{
                             Toast.makeText(getApplicationContext(),"You are Blocked!! Please Contact Admin",
                                     Toast.LENGTH_LONG).show();
                         }
                     }else {
-                        Toast.makeText(getApplicationContext(),"Wait App Is not Prepared Yet",
+                        Toast.makeText(getApplicationContext(),"Wait App Is not Prepared Yet. Please Check Your Internet Connection",
                                 Toast.LENGTH_LONG).show();
                     }
 
@@ -162,6 +166,7 @@ public class UserWelcome extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(user.isPrepared() && user.isSettingLoaded()){
+                    /*
                     Log.i("rahat", "Click Index: " + user.getClickIndexes());
                     Log.i("rahat", "Video Index: " + user.getvideoIndexes());
                     Log.i("rahat", "Content Urls: " + user.getContent_urls());
@@ -191,6 +196,7 @@ public class UserWelcome extends AppCompatActivity {
                     Log.i("rahat", "Break  Allowed: " + Boolean.toString(user.isBreakAllowed()));
                     Log.i("rahat", "Fraud Per Session: " + Integer.toString(user.getMaximumFraudPerSession()));
                     Log.i("rahat", "Fraud Per Day: " + Integer.toString(user.getMaximumFraudPerDay()));
+                    */
                     startActivity(new Intent(getApplicationContext(),UserDetail.class));
                 }else {
 

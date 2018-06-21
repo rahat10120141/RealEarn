@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         login_btn=(Button)findViewById(R.id.btn_login);
         register_btn=(Button)findViewById(R.id.btn_register);
         //test_button=(Button)findViewById(R.id.btn_rtest);
+        Log.i("rahat","uid"+user.getuId());
         if (user.getuId()!=null){
             finish();
             startActivity(new Intent(MainActivity.this,UserWelcome.class));

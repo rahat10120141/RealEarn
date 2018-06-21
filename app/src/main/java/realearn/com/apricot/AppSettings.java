@@ -129,6 +129,11 @@ public class AppSettings {
                     }else{
                         user.setVpnAllowed(false);
                     }
+                    if(jsonObject.getString("ba").equals("1")){
+                        user.setBreakAllowed(true);
+                    }else{
+                        user.setBreakAllowed(false);
+                    }
                     user.setMaximumFraudPerSession(jsonObject.getString("mfps"));
                     user.setMaximumFraudPerDay(jsonObject.getString("mfpd"));
                     user.setSettingLoaded(true);

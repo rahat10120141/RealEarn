@@ -483,20 +483,18 @@ public class User {
     }
     public String getuId() {
         try {
-            uId=decrypt(sharedPreferences.getString(encrypt("userId"),null));
+            uId=sharedPreferences.getString("uId",null);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return uId;
     }
     public void setuId(String uId) {
-        //this.uId = uId;
         try {
-            sharedPreferences.edit().putString(encrypt("userId"),encrypt(uId)).commit();
+            sharedPreferences.edit().putString("uId",uId).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        //PreferenceManager.getDefaultSharedPreferences(context).edit().putString(encrypt("userId"),encrypt(uId)).commit();   // for login bug fixing
     }
     public String getMobile() {
         try {

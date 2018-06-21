@@ -24,22 +24,18 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".RegisterActivity"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UserWelcome"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".TaskWindow"
             android:screenOrientation="portrait" />
         <activity
             android:name=".UserDetail"
-            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Withdraw"
@@ -48,11 +44,9 @@
             android:name=".AppRules"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Task_1"
-            android:noHistory="true" />
+            android:name=".Task_1" />
         <activity
-            android:name=".Task_2"
-            android:noHistory="true" />
+            android:name=".Task_2" />
         <activity android:name=".Task_complete" />
         <!--
             <activity

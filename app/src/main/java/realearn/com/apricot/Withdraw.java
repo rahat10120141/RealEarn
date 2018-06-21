@@ -7,8 +7,11 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +33,14 @@ import realearn.com.apricot.R;
 public class Withdraw extends AppCompatActivity {
     StringRequest stringRequest;
     Button submit;
-    TextView mobile;
+    EditText mobile;
     EditText amount;//conMobile
     String uid;
+    String type;
     User user;
+    Spinner spinner;
+    private int minimumWithdraw;
+    ArrayAdapter<CharSequence> adapter;
 
     AlertDialog.Builder builder;
     @Override
@@ -46,13 +53,37 @@ public class Withdraw extends AppCompatActivity {
                 Toast.LENGTH_LONG).show();
         user=new User(Withdraw.this);
         uid=user.getuId();
-
-        mobile=(TextView) findViewById(R.id.moobileNumber);
+        mobile=(EditText) findViewById(R.id.moobileNumber);
         //conMobile=(EditText)findViewById(R.id.confMobile);
         amount=(EditText) findViewById(R.id.txtWithdraw);
         submit=(Button) findViewById(R.id.withdrawSubmit);
 
         mobile.setText(user.getMobile());
+        mobile.setEnabled(false);
+        spinner=(Spinner)findViewById(R.id.spinner);
+        adapter=ArrayAdapter.createFromResource(getApplicationContext(),R.array.withdraw_method,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                type=parent.getItemAtPosition(position).toString();
+                if (parent.getItemIdAtPosition(position)!=0){
+                    minimumWithdraw=50;
+                    mobile.setEnabled(true);
+                }else{
+                    minimumWithdraw=30;
+                    mobile.setEnabled(false);
+                }
+
+                //Toast.makeText(getApplicationContext(),parent.getItemIdAtPosition(position)+" Is Selected",Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         builder=new AlertDialog.Builder(Withdraw.this);
 
@@ -70,7 +101,7 @@ public class Withdraw extends AppCompatActivity {
             DisplayAlert("input_error");
         }else {
             int am=Integer.parseInt(amount.getText().toString());
-            if(am<10){
+            if(am<minimumWithdraw){
                 DisplayAlert("low_balance");
             }
             if (am%10!=0){
@@ -135,10 +166,10 @@ public class Withdraw extends AppCompatActivity {
                     startActivity(new Intent(Withdraw.this,UserWelcome.class));
                 }else if (code.equals("low_balance")){
                     builder.setTitle("Low Balance");
-                    builder.setMessage("Your Balance is less than 10 taka");
+                    builder.setMessage("Your Balance is less than "+minimumWithdraw+" taka");
                 }else if(code.equals("illigal_formate")){
                     builder.setTitle("Illegal Formate");
-                    builder.setMessage("Your Request Balance Should be like: 10/20/30");
+                    builder.setMessage("Your Request Balance Should be like: 30/40/50");
                 }else if(code.equals("insufficient_balance")){
                     builder.setTitle("Insufficient Balance");
                     builder.setMessage("Your Requested Balance exceed your current Balance ");

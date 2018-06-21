@@ -75,8 +75,6 @@ public class Task_1 extends AppCompatActivity {
         webView.setWebViewClient(new WebViewClient());
         webView.getSettings().setJavaScriptEnabled(true);
         nextArticle=(Button)findViewById(R.id.nxtArticleMain);
-
-        //Log.i("click","I am alive");
         prepareBanner();
         user=new User(getApplicationContext());
         updateData=new UpdateData(getApplicationContext());
@@ -88,6 +86,10 @@ public class Task_1 extends AppCompatActivity {
         messageTxt2=(TextView)findViewById(R.id.message2);
         final_messageTxt=(TextView)findViewById(R.id.final_message);
 
+        if (!user.isActiveUser()){
+            startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+            finish();
+        }
         if (user.isShowingLog()){
             messageTxt.setText("Ad Is requested. Please Wait!!!");
         }
@@ -118,15 +120,24 @@ public class Task_1 extends AppCompatActivity {
             nextArticle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(int_opened && int_1_opened && int_2_opened){
-                        Log.i("rahat","All Ad Opened");
-                        user.setAdcounter(user.getAdcounter()+1);
-                        updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
-                        CheckUserBreak();
+                    if (isThisForClick(user.getAdcounter())){
+                        if (int_opened){
+                            user.setAdcounter(user.getAdcounter()+1);
+                            updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                            CheckUserBreak();
+                        }else{
+                            startActivity(new Intent(getApplicationContext(),Task_2.class));
+                        }
                     }else{
-                        Log.i("rahat","All Ad Did not Opened");
-                        startActivity(new Intent(getApplicationContext(),Task_2.class));
+                        if(int_opened && int_1_opened && int_2_opened){
+                            user.setAdcounter(user.getAdcounter()+1);
+                            updateData.ProcessInterstitialAdd(user.getAdcounter(),"view");
+                            CheckUserBreak();
+                        }else{
+                            startActivity(new Intent(getApplicationContext(),Task_2.class));
+                        }
                     }
+
                 }
             });
         }
@@ -243,6 +254,8 @@ public class Task_1 extends AppCompatActivity {
                         CheckUserBreak();
                     }
 
+                }else{
+                    clickViewTxt.setText("Next Article");
                 }
                 super.onAdClosed();
             }
@@ -252,7 +265,6 @@ public class Task_1 extends AppCompatActivity {
                 int_opened=true;
                 Log.i("rahat","int_opened: "+Boolean.toString(int_opened));
                 if (user.isAutoTask()){
-
                     if (!isThisForClick(user.getAdcounter())){
                         adTimer=new CountDownTimer(ad_waiting_time,1000) {
                             @Override
@@ -563,7 +575,7 @@ public class Task_1 extends AppCompatActivity {
             user.setActiveUser(false);
             updateData.BlockMyself();
             user.setFraud(0);
-            Toast.makeText(getApplicationContext(),"You have Clicked Too Many Ads",
+            Toast.makeText(getApplicationContext(),"You are blocked for Clicking Too Many Ads",
                     Toast.LENGTH_LONG).show();
             startActivity(new Intent(getApplicationContext(),UserWelcome.class));
             finish();

@@ -44,8 +44,6 @@ public class LoginActivity extends AppCompatActivity {
             startActivity(new Intent(LoginActivity.this,UserWelcome.class));
             finish();
         }
-
-        Log.i("deviceID",Settings.Secure.getString(getContentResolver(),Settings.Secure.ANDROID_ID));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         etUserId=(EditText) findViewById(R.id.et_userId);
         etPass=(EditText) findViewById(R.id.et_pass);

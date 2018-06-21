@@ -8,20 +8,21 @@ public class Appurls {
 
    //public static String baseUrl="http://ragory.com/index.php/";
    //public static String baseUrl="http://manik.ragory.com/index.php/";
-   public static String baseUrl="http://192.168.1.102/re/index.php/";
-   public static String login_url= baseUrl+ "login/userLogin";
-   public static String reg_ur=baseUrl+"login/register";
-   public static String add_urls=baseUrl+"addmanager/adData";
-   public static String image_add_view_success=baseUrl+"addmanager/processIrrestitial";
-   public static String video_add_view_success=baseUrl+"addmanager/processVideo";
-   public static String complete_task=baseUrl+"addmanager/completeTask";
-   public static String fetch_user_date=baseUrl+"users/getUserData";
-   public static String submit_break_time=baseUrl+"users/submitBreakTime";
-   public static String user_work_data=baseUrl+"users/getWorkData";
-   public static String withdraw_money=baseUrl+"users/submitWithdraw";
-   public static String updateFraudCount=baseUrl+"addmanager/ProcessFraud";
-   public static String updateDailyUserLog=baseUrl+"users/updateUserLog";
-   public static String appSettings=baseUrl+"addmanager/getAppSettings";
-   public static String blockMyself=baseUrl+"users/blockMyself";
+   public static String baseUrl="http://192.168.1.101/re";
+   public static String image_url=baseUrl+"/uploads/user_images/";
+   public static String login_url= baseUrl+ "/index.php/login/userLogin";
+   public static String reg_ur=baseUrl+"/index.php/login/register";
+   public static String add_urls=baseUrl+"/index.php/addmanager/adData";
+   public static String image_add_view_success=baseUrl+"/index.php/addmanager/processIrrestitial";
+   public static String video_add_view_success=baseUrl+"/index.php/addmanager/processVideo";
+   public static String complete_task=baseUrl+"/index.php/addmanager/completeTask";
+   public static String fetch_user_date=baseUrl+"/index.php/users/getUserData";
+   public static String submit_break_time=baseUrl+"/index.php/users/submitBreakTime";
+   public static String user_work_data=baseUrl+"/index.php/users/getWorkData";
+   public static String withdraw_money=baseUrl+"/index.php/users/submitWithdraw";
+   public static String updateFraudCount=baseUrl+"/index.php/addmanager/ProcessFraud";
+   public static String updateDailyUserLog=baseUrl+"/index.php/users/updateUserLog";
+   public static String appSettings=baseUrl+"/index.php/addmanager/getAppSettings";
+   public static String blockMyself=baseUrl+"/index.php/users/blockMyself";
 
 }

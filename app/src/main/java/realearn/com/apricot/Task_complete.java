@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
@@ -25,15 +27,19 @@ public class Task_complete extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task_complete);
-        //PrepareBanner();
+        PrepareBanner();
 
         user=new User(getApplicationContext());
         updateData=new UpdateData(getApplicationContext());
-
+        if (!user.isActiveUser()){
+            startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+            finish();
+        }
         rewardedVideoAd=MobileAds.getRewardedVideoAdInstance(getApplicationContext());
         rewardedVideoAd.setRewardedVideoAdListener(new RewardedVideoAdListener() {
             @Override
             public void onRewardedVideoAdLoaded() {
+                Log.i("rahat","Video Add Loaded");
             }
 
             @Override
@@ -51,7 +57,6 @@ public class Task_complete extends AppCompatActivity {
             @Override
             public void onRewarded(RewardItem rewardItem) {
                 if (user.getClickCounter()<user.getClick_per_session()){
-                    Log.i("rahat","user did not click the full add");
                     startActivity(new Intent(getApplicationContext(),UserWelcome.class));
                     finish();
                 }else{
@@ -69,6 +74,7 @@ public class Task_complete extends AppCompatActivity {
 
             @Override
             public void onRewardedVideoAdFailedToLoad(int i) {
+                Log.i("rahat","Failed To Load: "+Integer.toString(i));
             }
 
             @Override
@@ -90,11 +96,9 @@ public class Task_complete extends AppCompatActivity {
                     rewardedVideoAd.show();
                 }else{
                     if (user.getClickCounter()<user.getClick_per_session()){
-                        Log.i("rahat","user did not click the full add");
                         startActivity(new Intent(getApplicationContext(),UserWelcome.class));
                         finish();
                     }else{
-                        Log.i("rahat","user click the full add");
                         updateData.ProcessCompleteTask();
                         startActivity(new Intent(getApplicationContext(),UserWelcome.class));
                         finish();
@@ -113,11 +117,25 @@ public class Task_complete extends AppCompatActivity {
     }
     private void PrepareBanner(){
         adView1=(AdView) findViewById(R.id.comp_ad1);
+        adView1.setAdListener(new AdListener(){
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
+        });
         AdRequest adRequest1=new AdRequest.Builder().build();
         adView1.loadAd(adRequest1);
 
 
         adView2=(AdView) findViewById(R.id.comp_ad2);
+        adView2.setAdListener(new AdListener(){
+            @Override
+            public void onAdLeftApplication() {
+                UpdateFraudStatus();
+                super.onAdLeftApplication();
+            }
+        });
         AdRequest adRequest2=new AdRequest.Builder().build();
         adView2.loadAd(adRequest2);
 
@@ -133,7 +151,33 @@ public class Task_complete extends AppCompatActivity {
         AdRequest adRequest5=new AdRequest.Builder().build();
         adView5.loadAd(adRequest5);
     }
-
+    private void CheckFraudStatus(){
+        if (user.getDailyFraud()>user.getMaximumFraudPerDay()){
+            user.setActiveUser(false);
+            updateData.BlockMyself();
+            user.setFraud(0);
+            Toast.makeText(getApplicationContext(),"You are blocked for Clicking Too Many Ads",
+                    Toast.LENGTH_LONG).show();
+            startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+            finish();
+        }else{
+            if (user.getFraud()>user.getMaximumFraudPerSession()){
+                updateData.UpdateBreak();
+                user.setBreaktime(true);
+                user.setFraud(0);
+                Toast.makeText(getApplicationContext(),"You have Clicked Too Many Ads",
+                        Toast.LENGTH_LONG).show();
+                startActivity(new Intent(getApplicationContext(),UserWelcome.class));
+                finish();
+            }
+        }
+    }
+    private void UpdateFraudStatus(){
+        user.setFraud(user.getFraud()+1);
+        user.setDailyFraud(user.getDailyFraud()+1);
+        updateData.UpdateFraud();
+        CheckFraudStatus();
+    }
 
     @Override
     public void onBackPressed() {
